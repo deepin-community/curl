@@ -1,3 +1,337 @@
+curl (7.88.1-10) unstable; urgency=medium
+
+  * Add new patches to fix CVEs (closes: #1036239):
+    - CVE-2023-28319: UAF in SSH sha256 fingerprint check
+    - CVE-2023-28320: siglongjmp race condition
+    - CVE-2023-28321: IDN wildcard match
+    - CVE-2023-28322: more POST-after-PUT confusion
+  * d/libcurl*.symbols: Drop curl_jmpenv, not built anymore due to
+    CVE-2023-28320
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 18 May 2023 23:43:40 +0100
+
+curl (7.88.1-9) unstable; urgency=medium
+
+  [ Sergio Durigan Junior ]
+  * d/p/Use-correct-path-when-loading-libnss-pem-ckbi-.so.patch:
+    Don't prepend "nss" when opening libnssckbi.so. (Closes: #1034359)
+
+  [ Samuel Henrique ]
+  * Update list of tests that fail on IPv6-only envs and don't skip them on
+    autopkgtest
+  * d/p/fix-unix-domain-socket.patch: Import upstream patch to fix --unix
+    (closes: #1033963)
+
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 15 Apr 2023 20:03:44 +0100
+
+curl (7.88.1-8) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * d/gbp.conf: Push gbp conf with sane defaults
+  * d/salsa-ci.yml: Disable dh_auto_test with DEB_BUILD_OPTIONS
+  * d/rules: Add new build profiles to limit builds to a single TLS backend
+  * d/tests: Add new autopkgtests that runs curl's test suite
+
+  [ Sergio Durigan Junior ]
+  * d/rules: Remove -D_DEB_HOST_ARCH from curl-config's CFLAGS.
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 26 Mar 2023 11:36:24 +0100
+
+curl (7.88.1-7) unstable; urgency=medium
+
+  * Bump Standards-Version to 4.6.2
+  * d/p/06_always-disable-valgrind.patch: Remove unused patch
+  * d/patches: Refresh all patches
+  * Import 5 new upstream patches fixing CVES:
+    - CVE-2023-27533: TELNET option IAC injection
+    - CVE-2023-27534: SFTP path ~ resolving discrepancy
+    - CVE-2023-27535: FTP too eager connection reuse
+    - CVE-2023-27536: GSS delegation too eager connection re-use
+    - CVE-2023-27537: HSTS double-free
+    - CVE-2023-27538: SSH connection too eager reuse still
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 21 Mar 2023 22:39:05 +0000
+
+curl (7.88.1-6) unstable; urgency=medium
+
+  * d/rules: Ignore test results from tests that fail on IPv6-only builders
+    (closes: #1032343)
+  * d/control: Don't install gnutls-bin for tests on ppc64el (tests hangs
+    forever)
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 08 Mar 2023 20:57:09 +0000
+
+curl (7.88.1-5) unstable; urgency=medium
+
+  * Fix stringification of _DEB_HOST_ARCH macro.
+    - d/p/Use-correct-path-when-loading-libnss-pem-ckbi-.so.patch:
+      Use _DEB_HOST_ARCH directly.
+    - d/rules: Quote _DEB_HOST_ARCH when passing it with -D.
+
+ -- Sergio Durigan Junior <sergiodj@debian.org>  Mon, 06 Mar 2023 10:22:32 -0500
+
+curl (7.88.1-4) unstable; urgency=medium
+
+  * d/p/Use-correct-path-when-loading-libnss-pem-ckbi-.so.patch:
+    Prepend "/nss/" before the library name.
+
+ -- Sergio Durigan Junior <sergiodj@debian.org>  Sun, 05 Mar 2023 18:38:13 -0500
+
+curl (7.88.1-3) unstable; urgency=medium
+
+  * d/p/Use-correct-path-when-loading-libnss-pem-ckbi-.so.patch:
+    Use correct paths when loading libnss{pem,ckbi}.so. (Closes: #726073)
+  * d/rules: Pass _DEB_HOST_ARCH via C{,XX}FLAGS; reenable NSS PEM tests.
+  * d/control: B-D on nss-plugin-pem (test only).
+    Also, make libcurl3-nss depend on nss-plugin-pem as well.
+
+ -- Sergio Durigan Junior <sergiodj@debian.org>  Sun, 05 Mar 2023 12:59:58 -0500
+
+curl (7.88.1-2) unstable; urgency=medium
+
+  * Multiple test improvements, which will increase the reliability of the
+    package, especially when backporting fixes on stable and oldstable:
+    - Test results are now critical to the build process, if a test fails,
+      the build will fail.
+    - Add two new test build-dependencies to increase coverage: locales-all
+      and gnutls-bin.
+    - Only run non-flaky tests.
+    - Print logs of failed tests.
+    - Run all tests even if there was a failure.
+    - Ignore results of known failing tests (for Debian).
+    - Disable valgrind through a test parameter instead of patching
+      upstream source code.
+
+ -- Samuel Henrique <samueloph@debian.org>  Fri, 03 Mar 2023 08:28:19 +0000
+
+curl (7.88.1-1) unstable; urgency=medium
+
+  * New upstream version 7.88.1
+    - Fix the following CVEs (closes: #1031371)
+      ~ CVE-2023-23916: HTTP multi-header compression denial of service
+      ~ CVE-2023-23915: HSTS amnesia with --parallel
+      ~ CVE-2023-23914: HSTS ignored on multiple requests
+    - Fix curl_multi_socket_action regression (closes: #1029231)
+  * d/patches: Drop backported patch added to fix regression in setopt/getinfo
+  * d/copyright: Drop removed file from copyright
+  * d/control: Update BD to drop transitional package libidn11-dev
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 20 Feb 2023 22:35:53 +0000
+
+curl (7.87.0-2) unstable; urgency=medium
+
+  * d/patches: Add new upstream patch to fix regression in setopt/getinfo
+    (closes: #1027564)
+  * d/p/build-Divide-mit-krb5...patch: Refresh patch
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 15 Jan 2023 21:12:09 +0000
+
+curl (7.87.0-1) unstable; urgency=medium
+
+  * New upstream version 7.87.0
+  * d/patches:
+    - Update patches
+    - Drop all backported patches that are applied in the new release
+  * d/copyright: Remove missing file
+  * d/*.lintian-overrides: Remove unused overrides
+
+  [ Simon McVittie ]
+  * Make -dev packages 'Multi-Arch: same' back again (closes: #1024668)
+
+ -- Samuel Henrique <samueloph@debian.org>  Fri, 23 Dec 2022 20:36:01 +0000
+
+curl (7.86.0-3) unstable; urgency=medium
+
+  * Fix two HSTS-related CVEs.
+    - d/p/CVE-2022-43551-another-hsts-bypass-via-idn.patch: use the IDN
+      decoded name in HSTS checks.
+      (Closes: #1026829, CVE-2022-43551)
+    - d/p/CVE-2022-43552-http-proxy-deny-use-after-free.patch: do not free
+      smb's/telnet's protocol struct in *_done().
+      (Closes: #1026830, CVE-2022-43552)
+
+ -- Sergio Durigan Junior <sergiodj@debian.org>  Wed, 21 Dec 2022 15:55:18 -0500
+
+curl (7.86.0-2) unstable; urgency=medium
+
+  [ Debian Janitor ]
+  * Apply multi-arch hints. + libcurl4-gnutls-dev, libcurl4-nss-dev,
+    libcurl4-openssl-dev: Drop Multi-Arch: same.
+
+  [ Samuel Henrique ]
+  * d/patches: Backport three upstream patches to fix noproxy option.
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 15 Nov 2022 21:04:55 +0000
+
+curl (7.86.0-1) unstable; urgency=medium
+
+  * New upstream version 7.86.0
+    - Fix HSTS bypass via IDN:
+      curl's HSTS check could be bypassed to trick it to keep using HTTP.
+      (closes: CVE-2022-42916)
+    - Fix HTTP proxy double-free (closes: CVE-2022-42915)
+    - Fix .netrc parser out-of-bounds access (closes: CVE-2022-35260)
+    - Fix POST following PUT confusion (closes: CVE-2022-32221)
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 27 Oct 2022 20:38:24 +0100
+
+curl (7.85.0-1) unstable; urgency=medium
+
+  * New upstream version 7.85.0
+    - Fix control code in cookie denial of service:
+      When curl retrieves and parses cookies from an HTTP(S) server, it
+      accepts cookies using control codes (byte values below 32). When cookies
+      that contain such control codes are later sent back to an HTTP(S) server,
+      it might make the server return a 400 response. Effectively allowing a
+      "sister site" to deny service to siblings
+      (closes: #1018831, CVE-2022-35252)
+    - Fix FTBFS on riscv64 with gcc-12 (closes: #1015835)
+  * Bump Standards-Version to 4.6.1
+  * Add lintian overrides for old-style-config-script-multiarch-path triggered
+    for curl-config
+  * d/patches:
+    - 11_omit-directories-from-config.patch: Update patch
+    - 20_ftbfs_import_sched.patch: Drop patch, applied upstream
+  * d/rules: Fix configure args, remove bogus '--without-ssl'
+  * d/copyright: Update the whole file
+  * d/(control|watch): Update upstream's URL
+
+ -- Samuel Henrique <samueloph@debian.org>  Fri, 02 Sep 2022 13:00:10 +0100
+
+curl (7.84.0-2) unstable; urgency=medium
+
+  * d/p/20_ftbfs_import_sched.patch: New upstream patch to fix FTBFS
+    (closes: #1014596)
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 11 Jul 2022 22:50:01 +0100
+
+curl (7.84.0-1) unstable; urgency=medium
+
+  * New upstream version 7.84.0
+    - Fix the following CVEs:
+      ~ Improper Enforcement of Message Integrity During Transmission in a
+        Communication Channel (CVE-2022-32208)
+      ~ Improper Preservation of Permissions (CVE-2022-32207)
+      ~ Allocation of Resources Without Limits or Throttling (CVE-2022-32205,
+        CVE-2022-32206)
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 27 Jun 2022 22:06:25 +0100
+
+curl (7.83.1-2) unstable; urgency=medium
+
+  * d/p/fix_multiline_header_regression.patch: New upstream patch to fix
+    regression (closes: #1012263, #1011696)
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 14 Jun 2022 18:05:23 +0100
+
+curl (7.83.1-1) unstable; urgency=medium
+
+  * New upstream version 7.83.1
+    - Fix the following CVEs:
+      ~ HSTS bypass via trailing dot (CVE-2022-30115)
+      ~ TLS and SSH connection too eager reuse (CVE-2022-27782)
+      ~ CERTINFO never-ending busy-loop (CVE-2022-27781)
+      ~ percent-encoded path separator in URL host (CVE-2022-27780)
+      ~ cookie for trailing dot TLD (CVE-2022-27779)
+      ~ curl removes wrong file on error (CVE-2022-27778)
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 11 May 2022 17:46:48 +0100
+
+curl (7.83.0-1) unstable; urgency=medium
+
+  * New upstream version 7.83.0
+    - Fix auth/cookie leak on redirect (closes: #1010252, CVE-2022-27776)
+    - Fix bad local IPv6 connection reuse (closes: #1010253, CVE-2022-27775)
+    - Fix credential leak on redirect (closes: #1010254, CVE-2022-27774)
+    - Fix OAUTH2 bearer bypass in connection re-use
+      (closes: #1010295, CVE-2022-22576)
+  * d/libcurl*.symbols: update symbols files to add curl_easy_header and
+    curl_easy_nextheader
+  * d/patches:
+    - Refresh patches
+    - 12_fix_openssl_cm_check.patch: remove patch, applied upstream
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 28 Apr 2022 18:53:32 +0100
+
+curl (7.82.0-2) unstable; urgency=medium
+
+  * d/p/12_fix_openssl_cm_check.patch: New upstream patch to fix openssl CN
+    check (closes: #1007739, #1007740)
+  * d/control:
+    - Set libcurl4-doc as Multi-Arch: foreign
+    - Remove ancient version requirements for dependencies
+  * d/salsa-ci.yml: Disable reprotest until it acknowledges
+    SALSA_CI_DPKG_BUILDPACKAGE_ARGS
+
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 19 Mar 2022 13:55:00 +0000
+
+curl (7.82.0-1) unstable; urgency=medium
+
+  * New upstream version 7.82.0
+  * d/salsa-ci.yml: Add CI definition customized to skip tests (nocheck), to
+    avoid long build times
+  * Update and refresh patches: 13_fix-man-formatting.patch has been merged
+    upstream
+  * d/rules:
+    - Add --with-nss-deprecated, required to build with nss now
+      (upstream will drop support in August)
+    - Look for nocheck build profile in DEB_BUILD_PROFILES instead of
+      DEB_BUILD_OPTIONS (wider coverage)
+
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 05 Mar 2022 13:40:14 +0000
+
+curl (7.81.0-1) unstable; urgency=medium
+
+  * New upstream version 7.81.0
+  * d/p/13_fix-man-formatting.patch: Refresh patch
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 05 Jan 2022 09:31:32 -0300
+
+curl (7.80.0-3) unstable; urgency=medium
+
+  * Revert "Revert "debian/control: Add Build-Depends on libssh-dev for
+    Ubuntu".
+
+    As per #1002598, the blocker has been solved.
+
+    Note that this does not changes Debian's curl to libssh, it still
+    uses libssh2.
+
+    Discussions about changing to libssh are ongoing at #897950
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 26 Dec 2021 13:22:18 -0300
+
+curl (7.80.0-2) unstable; urgency=medium
+
+  * Revert "debian/control: Add Build-Depends on libssh-dev for Ubuntu"
+    (closes: #1002597)
+    The change had side effects on Debian due to the inclusion of the new
+    Build-dep, even though it doesn't changes the resulting binary. It cause
+    issues for architecture bootstraping.
+
+    We are gonna reintroduce this change once the issues are fixed, to allow
+    Ubuntu to remove its delta.
+
+    See discussions at #1002598 and #1002597 for details
+
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 25 Dec 2021 10:47:13 -0300
+
+curl (7.80.0-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 7.80.0
+  * Bump Standards-Version to 4.6.0
+  * Add new symbol curl_url_strerror to symbols files
+  * Compile with zstd support (closes: #983660)
+  * d/p/12_use-python3-in-tests.patch: Drop patch, merged upstream
+  * d/p/13_fix-man-formatting.patch: Update patch
+  * d/p/14_fix-compatibility-impacket-0-9-23.patch: Drop patch, merged upstream
+
+  [ Jeremy Bicha ]
+  * debian/control: Add Build-Depends on libssh-dev for Ubuntu
+
+ -- Samuel Henrique <samueloph@debian.org>  Fri, 24 Dec 2021 11:42:57 -0300
+
 curl (7.79.1-2) unstable; urgency=medium
 
   * d/rules: Make test failures non-fatal again.
