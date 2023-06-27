@@ -1,11 +1,30 @@
+# Packaging patches.
 04_workaround_as_needed_bug.patch
-06_always-disable-valgrind.patch
 08_enable-zsh.patch
+build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a.patch
 11_omit-directories-from-config.patch
-12_use-python3-in-tests.patch
-13_fix-man-formatting.patch
-14_fix-compatibility-impacket-0-9-23.patch
+Remove-curl-s-LDFLAGS-from-curl-config-static-libs.patch
+Use-correct-path-when-loading-libnss-pem-ckbi-.so.patch
 
-# do not add patches below
+fix-unix-domain-socket.patch
+
+# CVE fixes.
+# Patches from 8.0.1.
+CVE-2023-27533.patch
+CVE-2023-27534.patch
+CVE-2023-27538.patch
+CVE-2023-27535.patch
+CVE-2023-27536.patch
+CVE-2023-27537.patch
+
+# Patches from 8.1.0.
+CVE-2023-28319.patch
+CVE-2023-28320.patch
+CVE-2023-28320-1.patch
+CVE-2023-28321.patch
+CVE-2023-28322.patch
+
+# Do not add patches below.
+# Used to generate packages for the other crypto libraries.
 90_gnutls.patch
 99_nss.patch
