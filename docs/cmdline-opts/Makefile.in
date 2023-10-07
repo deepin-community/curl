@@ -144,7 +144,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/curl-amissl.m4 \
 	$(top_srcdir)/m4/curl-confopts.m4 \
 	$(top_srcdir)/m4/curl-functions.m4 \
 	$(top_srcdir)/m4/curl-gnutls.m4 \
-	$(top_srcdir)/m4/curl-mbedtls.m4 $(top_srcdir)/m4/curl-nss.m4 \
+	$(top_srcdir)/m4/curl-mbedtls.m4 \
 	$(top_srcdir)/m4/curl-openssl.m4 \
 	$(top_srcdir)/m4/curl-override.m4 \
 	$(top_srcdir)/m4/curl-reentrant.m4 \
@@ -299,7 +299,6 @@ MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
 NROFF = @NROFF@
-NSS_LIBS = @NSS_LIBS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -344,9 +343,8 @@ USE_NGHTTP2 = @USE_NGHTTP2@
 USE_NGHTTP3 = @USE_NGHTTP3@
 USE_NGTCP2 = @USE_NGTCP2@
 USE_NGTCP2_CRYPTO_GNUTLS = @USE_NGTCP2_CRYPTO_GNUTLS@
-USE_NGTCP2_CRYPTO_OPENSSL = @USE_NGTCP2_CRYPTO_OPENSSL@
+USE_NGTCP2_CRYPTO_QUICTLS = @USE_NGTCP2_CRYPTO_QUICTLS@
 USE_NGTCP2_CRYPTO_WOLFSSL = @USE_NGTCP2_CRYPTO_WOLFSSL@
-USE_NSS = @USE_NSS@
 USE_OPENLDAP = @USE_OPENLDAP@
 USE_QUICHE = @USE_QUICHE@
 USE_RUSTLS = @USE_RUSTLS@
@@ -426,6 +424,7 @@ DPAGES = \
   append.d \
   aws-sigv4.d \
   basic.d \
+  ca-native.d \
   cacert.d \
   capath.d \
   cert-status.d \
@@ -491,6 +490,7 @@ DPAGES = \
   globoff.d \
   happy-eyeballs-timeout-ms.d \
   haproxy-protocol.d \
+  haproxy-clientip.d \
   head.d \
   header.d \
   help.d \
@@ -566,6 +566,7 @@ DPAGES = \
   proto.d \
   proxy-anyauth.d \
   proxy-basic.d \
+  proxy-ca-native.d \
   proxy-cacert.d \
   proxy-capath.d \
   proxy-cert-type.d \
@@ -574,6 +575,7 @@ DPAGES = \
   proxy-crlfile.d \
   proxy-digest.d \
   proxy-header.d \
+  proxy-http2.d \
   proxy-insecure.d \
   proxy-key-type.d \
   proxy-key.d \
@@ -657,6 +659,8 @@ DPAGES = \
   tlsv1.d \
   tr-encoding.d \
   trace-ascii.d \
+  trace-config.d \
+  trace-ids.d \
   trace-time.d \
   trace.d \
   unix-socket.d \
@@ -666,6 +670,7 @@ DPAGES = \
   use-ascii.d \
   user-agent.d \
   user.d \
+  variable.d \
   verbose.d \
   version.d \
   write-out.d \
@@ -874,7 +879,7 @@ uninstall-am:
 
 all: $(MANPAGE)
 
-$(MANPAGE): $(DPAGES) $(OTHERPAGES) Makefile.inc
+$(MANPAGE): $(DPAGES) $(OTHERPAGES) Makefile.inc gen.pl
 	$(GEN)(rm -f $(MANPAGE) && cd $(srcdir) && @PERL@ ./gen.pl mainpage $(DPAGES) > $(builddir)/manpage.tmp && mv $(builddir)/manpage.tmp $(MANPAGE))
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

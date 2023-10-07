@@ -35,6 +35,7 @@ Each file has a set of meta-data and a body of text.
     Mutexed: (space separated list of options this overrides, no dashes)
     Protocols: (space separated list for which protocols this option works)
     Requires: (space separated list of features this requires, no dashes)
+    Scope: global (if the option is global)
     See-also: (space separated list of related options, no dashes)
     Short: (single letter, without dash)
     SPDX-License-Identifier: curl
@@ -44,19 +45,19 @@ Each file has a set of meta-data and a body of text.
 ### Body
 
 The body of the description. Only refer to options with their long form option
-version, like `--verbose`. The output generator will replace such with the
+version, like `--verbose`. The output generator replaces such option with the
 correct markup that shows both short and long version.
 
-Text written within `*asterisks*` will get shown using italics. Text within
-two `**asterisks**` will get shown using bold.
+Text written within `*asterisks*` is shown using italics. Text within two
+`**asterisks**` is shown using bold.
 
-Text that is prefixed with a space will be treated like an "example" and will
-be output in monospace.
+Text that is prefixed with a space is treated like an "example" and gets
+output in monospace.
 
 ## Header and footer
 
-`page-header` is the file that will be output before the generated options
-output for the master man page.
+`page-header` is the file that is output before the generated options output
+for the master man page.
 
 `page-footer` is appended after all the individual options.
 
