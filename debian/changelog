@@ -1,3 +1,9 @@
+curl (8.3.0-2deepin1) unstable; urgency=medium
+
+  * Fix CVE-2023-38545.
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 11 Oct 2023 14:12:32 +0800
+
 curl (8.3.0-2) unstable; urgency=medium
 
   * d/rules: Add test 3102 to TESTS_FAILS_ON_IPV6_ONLY_MACHINES
