@@ -133,7 +133,6 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/curl-amissl.m4 \
 	$(top_srcdir)/m4/xc-am-iface.m4 \
 	$(top_srcdir)/m4/xc-cc-check.m4 \
 	$(top_srcdir)/m4/xc-lt-iface.m4 \
-	$(top_srcdir)/m4/xc-translit.m4 \
 	$(top_srcdir)/m4/xc-val-flgs.m4 \
 	$(top_srcdir)/m4/zz40-xc-ovr.m4 \
 	$(top_srcdir)/m4/zz50-xc-ovr.m4 \
@@ -246,11 +245,11 @@ CFLAG_CURL_SYMBOL_HIDING = @CFLAG_CURL_SYMBOL_HIDING@
 CONFIGURE_OPTIONS = @CONFIGURE_OPTIONS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-CPPFLAG_CURL_STATICLIB = @CPPFLAG_CURL_STATICLIB@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
 CURLVERSION = @CURLVERSION@
 CURL_CA_BUNDLE = @CURL_CA_BUNDLE@
+CURL_CA_EMBED = @CURL_CA_EMBED@
 CURL_CFLAG_EXTRAS = @CURL_CFLAG_EXTRAS@
 CURL_DISABLE_DICT = @CURL_DISABLE_DICT@
 CURL_DISABLE_FILE = @CURL_DISABLE_FILE@
@@ -271,7 +270,6 @@ CURL_DISABLE_TFTP = @CURL_DISABLE_TFTP@
 CURL_LT_SHLIB_VERSIONED_FLAVOUR = @CURL_LT_SHLIB_VERSIONED_FLAVOUR@
 CURL_NETWORK_AND_TIME_LIBS = @CURL_NETWORK_AND_TIME_LIBS@
 CURL_NETWORK_LIBS = @CURL_NETWORK_LIBS@
-CURL_PLIST_VERSION = @CURL_PLIST_VERSION@
 CURL_WITH_MULTI_SSL = @CURL_WITH_MULTI_SSL@
 CYGPATH_W = @CYGPATH_W@
 DEFAULT_SSL_BACKEND = @DEFAULT_SSL_BACKEND@
@@ -312,8 +310,12 @@ IPV6_ENABLED = @IPV6_ENABLED@
 LCOV = @LCOV@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
-LIBCURL_LIBS = @LIBCURL_LIBS@
-LIBCURL_NO_SHARED = @LIBCURL_NO_SHARED@
+LIBCURL_PC_CFLAGS = @LIBCURL_PC_CFLAGS@
+LIBCURL_PC_CFLAGS_PRIVATE = @LIBCURL_PC_CFLAGS_PRIVATE@
+LIBCURL_PC_LIBS = @LIBCURL_PC_LIBS@
+LIBCURL_PC_LIBS_PRIVATE = @LIBCURL_PC_LIBS_PRIVATE@
+LIBCURL_PC_REQUIRES = @LIBCURL_PC_REQUIRES@
+LIBCURL_PC_REQUIRES_PRIVATE = @LIBCURL_PC_REQUIRES_PRIVATE@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -324,11 +326,9 @@ LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
-MANOPT = @MANOPT@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
-NROFF = @NROFF@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -346,10 +346,8 @@ PKGADD_NAME = @PKGADD_NAME@
 PKGADD_PKG = @PKGADD_PKG@
 PKGADD_VENDOR = @PKGADD_VENDOR@
 PKGCONFIG = @PKGCONFIG@
-RANDOM_FILE = @RANDOM_FILE@
 RANLIB = @RANLIB@
 RC = @RC@
-REQUIRE_LIB_DEPS = @REQUIRE_LIB_DEPS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -360,22 +358,29 @@ STRIP = @STRIP@
 SUPPORT_FEATURES = @SUPPORT_FEATURES@
 SUPPORT_PROTOCOLS = @SUPPORT_PROTOCOLS@
 TEST_NGHTTPX = @TEST_NGHTTPX@
+USE_APPLE_IDN = @USE_APPLE_IDN@
 USE_ARES = @USE_ARES@
 USE_BEARSSL = @USE_BEARSSL@
 USE_GNUTLS = @USE_GNUTLS@
 USE_HYPER = @USE_HYPER@
+USE_LIBPSL = @USE_LIBPSL@
 USE_LIBRTMP = @USE_LIBRTMP@
 USE_LIBSSH = @USE_LIBSSH@
 USE_LIBSSH2 = @USE_LIBSSH2@
+USE_LIBUV = @USE_LIBUV@
 USE_MBEDTLS = @USE_MBEDTLS@
 USE_MSH3 = @USE_MSH3@
 USE_NGHTTP2 = @USE_NGHTTP2@
 USE_NGHTTP3 = @USE_NGHTTP3@
 USE_NGTCP2 = @USE_NGTCP2@
+USE_NGTCP2_CRYPTO_BORINGSSL = @USE_NGTCP2_CRYPTO_BORINGSSL@
 USE_NGTCP2_CRYPTO_GNUTLS = @USE_NGTCP2_CRYPTO_GNUTLS@
 USE_NGTCP2_CRYPTO_QUICTLS = @USE_NGTCP2_CRYPTO_QUICTLS@
 USE_NGTCP2_CRYPTO_WOLFSSL = @USE_NGTCP2_CRYPTO_WOLFSSL@
+USE_NGTCP2_H3 = @USE_NGTCP2_H3@
 USE_OPENLDAP = @USE_OPENLDAP@
+USE_OPENSSL_H3 = @USE_OPENSSL_H3@
+USE_OPENSSL_QUIC = @USE_OPENSSL_QUIC@
 USE_QUICHE = @USE_QUICHE@
 USE_RUSTLS = @USE_RUSTLS@
 USE_SCHANNEL = @USE_SCHANNEL@
@@ -389,6 +394,7 @@ USE_WOLFSSH = @USE_WOLFSSH@
 USE_WOLFSSL = @USE_WOLFSSL@
 VERSION = @VERSION@
 VERSIONNUM = @VERSIONNUM@
+VSFTPD = @VSFTPD@
 ZLIB_LIBS = @ZLIB_LIBS@
 ZSH_FUNCTIONS_DIR = @ZSH_FUNCTIONS_DIR@
 abs_builddir = @abs_builddir@
@@ -445,18 +451,76 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-HTMLPAGES = testcurl.html runtests.html
-PDFPAGES = testcurl.pdf runtests.pdf
-MANDISTPAGES = runtests.1.dist testcurl.1.dist
-EXTRA_DIST = appveyor.pm azure.pm badsymbols.pl check-deprecated.pl CMakeLists.txt \
- devtest.pl dictserver.py directories.pm disable-scan.pl error-codes.pl extern-scan.pl FILEFORMAT.md \
- processhelp.pm ftpserver.pl getpart.pm globalconfig.pm http-server.pl http2-server.pl \
- http3-server.pl manpage-scan.pl manpage-syntax.pl markdown-uppercase.pl mem-include-scan.pl \
- memanalyze.pl negtelnetserver.py nroff-scan.pl option-check.pl options-scan.pl \
- pathhelp.pm README.md rtspserver.pl runner.pm runtests.1 runtests.pl secureserver.pl \
- serverhelp.pm servers.pm smbserver.py sshhelp.pm sshserver.pl stunnel.pem symbol-scan.pl \
- testcurl.1 testcurl.pl testutil.pm tftpserver.pl util.py valgrind.pm \
- valgrind.supp version-scan.pl check-translatable-options.pl
+
+# if we disable man page building, ignore these
+@BUILD_DOCS_TRUE@RUNTESTS_DOCS = runtests.1
+@BUILD_DOCS_TRUE@TESTCURL_DOCS = testcurl.1
+@BUILD_DOCS_TRUE@MANFILES = $(RUNTESTS_DOCS) $(TESTCURL_DOCS)
+CURLPAGES = runtests.md testcurl.md
+
+# scripts used in test cases
+TESTSCRIPTS = \
+ test1119.pl  \
+ test1132.pl  \
+ test1135.pl  \
+ test1139.pl  \
+ test1140.pl  \
+ test1165.pl  \
+ test1167.pl  \
+ test1173.pl  \
+ test1175.pl  \
+ test1177.pl  \
+ test1222.pl  \
+ test1275.pl  \
+ test1276.pl  \
+ test1477.pl  \
+ test1486.pl  \
+ test1488.pl  \
+ test1544.pl  \
+ test1707.pl  \
+ test971.pl
+
+EXTRA_DIST = \
+ CMakeLists.txt     \
+ FILEFORMAT.md      \
+ README.md          \
+ appveyor.pm        \
+ azure.pm           \
+ devtest.pl         \
+ dictserver.py      \
+ directories.pm     \
+ ech_combos.py      \
+ ech_tests.sh       \
+ ftpserver.pl       \
+ getpart.pm         \
+ globalconfig.pm    \
+ http-server.pl     \
+ http2-server.pl    \
+ http3-server.pl    \
+ memanalyze.pl      \
+ negtelnetserver.py \
+ nghttpx.conf       \
+ pathhelp.pm        \
+ processhelp.pm     \
+ requirements.txt   \
+ rtspserver.pl      \
+ runner.pm          \
+ runtests.pl        \
+ secureserver.pl    \
+ serverhelp.pm      \
+ servers.pm         \
+ smbserver.py       \
+ sshhelp.pm         \
+ sshserver.pl       \
+ stunnel.pem        \
+ testcurl.pl        \
+ testutil.pm        \
+ tftpserver.pl      \
+ util.py            \
+ valgrind.pm        \
+ valgrind.supp      \
+ $(TESTSCRIPTS)     \
+ $(CURLPAGES)
 
 DISTCLEANFILES = configurehelp.pm
 @BUILD_UNITTESTS_FALSE@BUILD_UNIT = 
@@ -471,7 +535,6 @@ SUBDIRS = certs data server libtest http $(BUILD_UNIT)
 DIST_SUBDIRS = $(SUBDIRS) $(DIST_UNIT)
 PERLFLAGS = -I$(srcdir)
 CLEANFILES = .http.pid .https.pid .ftp.pid .ftps.pid $(MANDISTPAGES)
-MAN2HTML = roffit $< >$@
 @CROSSCOMPILING_FALSE@TEST = srcdir=$(srcdir) $(PERL) $(PERLFLAGS) $(srcdir)/runtests.pl
 @CROSSCOMPILING_TRUE@TEST = @echo "NOTICE: we can't run the tests when cross-compiling!"
 @CROSSCOMPILING_FALSE@TEST_Q = -a -s
@@ -485,11 +548,13 @@ MAN2HTML = roffit $< >$@
 @CROSSCOMPILING_FALSE@TEST_NF = -a -p ~flaky ~timing-dependent
 
 # special CI target derived from nonflaky with CI-specific flags
-@CROSSCOMPILING_FALSE@TEST_CI = $(TEST_NF) -rm
+@CROSSCOMPILING_FALSE@TEST_CI = $(TEST_NF) -r -rm -j2
+CD2NROFF = $(top_srcdir)/scripts/cd2nroff $< >$@
+SUFFIXES = .1 .md
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .1 .html .pdf
+.SUFFIXES: .1 .md
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -499,9 +564,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign tests/Makefile
+	  $(AUTOMAKE) --gnu tests/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -686,7 +751,6 @@ distdir-am: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-@CURLDEBUG_FALSE@all-local:
 all-am: Makefile all-local
 installdirs: installdirs-recursive
 installdirs-am:
@@ -726,8 +790,6 @@ clean: clean-recursive
 
 clean-am: clean-generic clean-libtool mostlyclean-am
 
-distclean: distclean-recursive
-	-rm -f Makefile
 distclean-am: clean-am distclean-generic distclean-tags
 
 dvi: dvi-recursive
@@ -809,6 +871,9 @@ uninstall-am:
 curl:
 	@cd $(top_builddir) && $(MAKE)
 
+.md.1:
+	$(CD2)$(CD2NROFF)
+
 # make sure that PERL is pointing to an executable
 perlcheck:
 	@if ! test -x "$(PERL)"; then echo "No perl!"; exit 2; fi
@@ -837,24 +902,16 @@ torture-test: perlcheck all
 event-test: perlcheck all
 	$(TEST) $(TEST_E) $(TFLAGS)
 
-.1.html:
-	$(MAN2HTML)
-
-.1.pdf:
-	@(foo=`echo $@ | sed -e 's/\.[0-9]$$//g'`; \
-	groff -Tps -man $< >$$foo.ps; \
-	ps2pdf $$foo.ps $@; \
-	rm $$foo.ps; \
-	echo "converted $< to $@")
-
 checksrc:
 	(cd libtest && $(MAKE) checksrc)
 	(cd unit && $(MAKE) checksrc)
 	(cd server && $(MAKE) checksrc)
 	(cd http && $(MAKE) checksrc)
 
-# for debug builds, we scan the sources on all regular make invokes
-@CURLDEBUG_TRUE@all-local: checksrc
+all-local: $(MANFILES)
+
+distclean:
+	rm -f $(MANFILES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -190,10 +190,10 @@ use File::Temp qw/ tempfile/;
 #######################################################################
 # Initialize configuration variables
 sub initserverconfig {
-    my ($fh, $socks) = tempfile("/tmp/curl-socksd-XXXXXXXX");
+    my ($fh, $socks) = tempfile("curl-socksd-XXXXXXXX", TMPDIR => 1);
     close($fh);
     unlink($socks);
-    my ($f2, $http) = tempfile("/tmp/curl-http-XXXXXXXX");
+    my ($f2, $http) = tempfile("curl-http-XXXXXXXX", TMPDIR => 1);
     close($f2);
     unlink($http);
     $SOCKSUNIXPATH = $socks; # SOCKS Unix domain socket
@@ -501,18 +501,6 @@ sub stopserver {
     my $result = 0;
     foreach my $server (@killservers) {
         my $pidfile = $serverpidfile{$server};
-        my $pid = processexists($pidfile);
-        if($pid > 0) {
-            if($err_unexpected) {
-                logmsg "ERROR: ";
-                $result = -1;
-            }
-            else {
-                logmsg "Warning: ";
-            }
-            logmsg "$server server unexpectedly alive\n";
-            killpid($verbose, $pid);
-        }
         unlink($pidfile) if(-f $pidfile);
     }
 
@@ -2323,7 +2311,7 @@ sub responsive_httptls_server {
 sub startservers {
     my @what = @_;
     my ($pid, $pid2);
-    my $serr;  # error while starting a server (as as the return enumerations)
+    my $serr;  # error while starting a server (as of the return enumerations)
     for(@what) {
         my (@whatlist) = split(/\s+/,$_);
         my $what = lc($whatlist[0]);
@@ -2432,8 +2420,9 @@ sub startservers {
             }
         }
         elsif($what eq "http") {
-            if($torture && $run{'http'} &&
+            if($run{'http'} &&
                !responsive_http_server("http", $verbose, 0, protoport('http'))) {
+                logmsg "* restarting unresponsive HTTP server\n";
                 if(stopserver('http')) {
                     return ("failed stopping unresponsive HTTP server", 3);
                 }
@@ -2970,6 +2959,8 @@ sub subvariables {
     $$thing =~ s/${prefix}PWD/$pwd/g;
     $$thing =~ s/${prefix}POSIX_PWD/$posix_pwd/g;
     $$thing =~ s/${prefix}VERSION/$CURLVERSION/g;
+    $$thing =~ s/${prefix}VERNUM/$CURLVERNUM/g;
+    $$thing =~ s/${prefix}DATE/$DATE/g;
     $$thing =~ s/${prefix}TESTNUMBER/$testnum/g;
 
     my $file_pwd = $pwd;
