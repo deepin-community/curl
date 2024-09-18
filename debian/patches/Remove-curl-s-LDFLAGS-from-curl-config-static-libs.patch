@@ -27,16 +27,16 @@ Signed-off-by: Simon McVittie <smcv@collabora.com>
  curl-config.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: curl/curl-config.in
-===================================================================
---- curl.orig/curl-config.in
-+++ curl/curl-config.in
-@@ -165,7 +165,7 @@ while test $# -gt 0; do
+diff --git a/curl-config.in b/curl-config.in
+index 4e37a0a..b001a39 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -162,7 +162,7 @@ while test "$#" -gt 0; do
  
-     --static-libs)
-         if test "X@ENABLE_STATIC@" != "Xno" ; then
--          echo -Wl,-Bstatic -lcurl -Wl,-Bdynamic @LDFLAGS@ @LIBCURL_LIBS@
-+          echo -Wl,-Bstatic -lcurl -Wl,-Bdynamic @LIBCURL_LIBS@
-         else
-           echo "curl was built with static libraries disabled" >&2
-           exit 1
+   --static-libs)
+     if test "X@ENABLE_STATIC@" != "Xno" ; then
+-      echo -Wl,-Bstatic -lcurl -Wl,-Bdynamic @LDFLAGS@ @LIBCURL_PC_LIBS_PRIVATE@
++      echo -Wl,-Bstatic -lcurl -Wl,-Bdynamic @LIBCURL_PC_LIBS_PRIVATE@
+     else
+       echo 'curl was built with static libraries disabled' >&2
+       exit 1
