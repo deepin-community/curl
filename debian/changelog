@@ -1,8 +1,57 @@
-curl (8.11.0-0deepin1) unstable; urgency=medium
+curl (8.12.0+git20250209.89ed161+ds-1deepin1) unstable; urgency=medium
+
+  * Revert t64 changes.
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Mon, 10 Feb 2025 16:41:15 +0800
+
+curl (8.12.0+git20250209.89ed161+ds-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * d/curl.NEWS: Update wcurl's list of features
+
+  [ Carlos Henrique Lima Melara ]
+  * New upstream version 8.12.0+git20250209.89ed161+ds.
+  * d/copyright: update maintainer's copyright years.
+  * d/libcurl*.symbols: add symbols introduced in 8.12.0.
+  * d/patches/: rebase patches against 8.12.0
+      - async_thread_avoid_closing_eventfd_twice.patch: drop, present in 8.12.0.
+      - sectransp_free_certificate_on_error.patch: drop, present in 8.12.0.
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Sun, 09 Feb 2025 00:08:26 +0100
+
+curl (8.11.1-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 8.11.1
+    - Fix CVE-2024-11053: netrc and redirect credential leak (closes: #1089682)
+  * Update wcurl to 2024.12.08
+  * New patches:
+    - async_thread_avoid_closing_eventfd_twice: Fix file descriptor issue with eventfd
+    - sectransp_free_certificate_on_error: Fix memory leak
+  * Refresh patches:
+    - ZZZgnutls-build
+    - build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a
+  * d/p/11_omit-directories-from-config: Update patch
+  * Drop merged patches:
+    - cmdline_ech_md_formatting_cleanups
+    - duphandle_also_init_netrc
+    - libssh_when_using_IPv6_numerical_address_add_brackets
+    - netrc_support_large_file_longer_lines_longer_tokens
+    - setopt_fix_CURLOPT_HTTP_CONTENT_DECODING
+  * d/p/Remove-curl-s-LDFLAGS-from-curl-config-static-libs: Remove patch, not needed anymore
+
+  [ Carlos Henrique Lima Melara ]
+  * d/t/upstream-tests-*: test gnutls backend against installed curl
+  * d/t/control: install curl on upstream-tests-gnutls and remove on openssl
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 12 Dec 2024 21:38:04 +0000
+
+curl (8.11.0-1) unstable; urgency=medium
 
   [ Samuel Henrique ]
   * New upstream version 8.11.0
   * Fix CVE-2024-9681: HSTS subdomain overwrites parent cache entry
+   (closes: #1086804)
   * Update patches for the new release
   * d/rules: Drop '--enable-websockets', it's enabled by default now
   * d/libcurl*.symbols: Remove HIDDEN@HIDDEN 7.16.2
@@ -18,26 +67,21 @@ curl (8.11.0-0deepin1) unstable; urgency=medium
   * d/control: move libldap2-dev to Depends and use newer libldap-dev name
   * d/control: move libkrb5-dev from Suggests to Depends for -dev packages
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Tue, 19 Nov 2024 12:08:33 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 09 Nov 2024 17:34:22 +0000
 
-curl (8.10.1-0deepin2) unstable; urgency=medium
+curl (8.10.1-2) unstable; urgency=medium
 
-  * libcurl4 should not replaces itself.
+  * d/patches/gtls_add_p12_format_support.patch: New upstream patch for P12
+    support
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 17:18:39 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 10 Oct 2024 23:22:24 +0100
 
-curl (8.10.1-0deepin1) unstable; urgency=medium
+curl (8.10.1-1) unstable; urgency=medium
 
-  * New upstream version 8.10.1.
-  * Refresh ZZZgnutls-build.patch.
+  * New upstream version 8.10.1
+  * d/p/ZZZgnutls-build.patch: Update patch
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 15:11:28 +0800
-
-curl (8.10.0-2deepin1) unstable; urgency=medium
-
-  * Revert t64.
-
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 14:30:44 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 18 Sep 2024 07:27:29 +0100
 
 curl (8.10.0-2) unstable; urgency=medium
 

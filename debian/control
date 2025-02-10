@@ -58,6 +58,7 @@ Description: command line tool for transferring data with URL syntax
  busload of other useful tricks.
 
 Package: libcurl4
+Breaks: libcurl4 (<< ${source:Version})
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -83,6 +84,7 @@ Description: easy-to-use client-side URL transfer library (OpenSSL flavour)
  SSL support is provided by OpenSSL.
 
 Package: libcurl3-gnutls
+Breaks: libcurl3-gnutls (<< ${source:Version})
 Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
