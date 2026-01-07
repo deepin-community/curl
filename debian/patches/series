@@ -9,3 +9,4 @@ setopt_fix_CURLOPT_HTTP_CONTENT_DECODING.patch
 netrc_support_large_file_longer_lines_longer_tokens.patch
 cmdline_ech_md_formatting_cleanups.patch
 libssh_when_using_IPv6_numerical_address_add_brackets.patch
+CVE-2025-0725.patch
