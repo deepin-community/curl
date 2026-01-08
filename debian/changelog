@@ -1,8 +1,428 @@
-curl (8.11.0-0deepin1) unstable; urgency=medium
+curl (8.18.0-1) unstable; urgency=medium
+
+  * New upstream version 8.18.0
+  * debian/control:
+      - Bump stds-version to 4.7.3.
+      - Remove Priority field, it already defaults to optional.
+      - Remove Rules-Requires-Root, it already defaults to no.
+  * debian/copyright: bump packaging copyright years, happy 2026!
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Wed, 07 Jan 2026 21:09:51 -0300
+
+curl (8.18.0~rc3-1) unstable; urgency=medium
+
+  * New upstream version 8.18.0~rc3
+  * Refresh patches
+  * d/copyright: Remove entries for files removed upstream
+  * Refresh patches:
+     - ZZZgnutls-build.patch
+     - build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a.patch
+  * d/copyright: Remove entries for files removed upstream:
+     - lib/vtls/mbedtls_threadlock.c
+     - lib/vtls/mbedtls_threadlock.h
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 28 Dec 2025 21:54:41 -0800
+
+curl (8.18.0~rc2-1) unstable; urgency=medium
+
+  * New upstream version 8.18.0~rc2
+  * d/copyright: Remove entries for files removed upstream
+  * d/patches:
+    - Drop patches merged upstream:
+      ~ fix-progress-meter-in-parallel-mode.patch
+      ~ wcurl-CVE-2025-11563.patch
+    - Update patches:
+      ~ ZZZgnutls-build.patch:
+        + Variables AM_CFLAGS and AM_LDFLAGS were dropped
+          in lib/Makefile.am
+        + Update patch's context.
+      ~ build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a.patch:
+        + Context update.
+        + Update patch offset.
+      ~ 11_omit-directories-from-config.patch:
+        + Update for upstream usage of double quotes (replacing single quotes)
+          for variables and usage of '&& test' instead of '-a' in
+          curl-config.in.
+  * d/libcurl4-doc.docs: Some docs were converted to .md:
+    - docs/FAQ.md
+    - docs/KNOWN_BUGS.md
+    - docs/TODO.md
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 15 Dec 2025 18:51:22 -0800
+
+curl (8.17.0-3) unstable; urgency=medium
+
+  * d/p/fix-progress-meter-in-parallel-mode.patch: cherry-pick from upstream.
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Sun, 23 Nov 2025 21:41:12 -0300
+
+curl (8.17.0-2) unstable; urgency=medium
+
+  * d/p/wcurl-CVE-2025-11563.patch: Import new upstream patch to fix
+    CVE-2025-11563
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 12 Nov 2025 20:08:24 -0800
+
+curl (8.17.0-1) unstable; urgency=medium
+
+  * New upstream version 8.17.0
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 05 Nov 2025 08:22:23 +0000
+
+curl (8.17.0~rc3-1) unstable; urgency=medium
+
+  * New upstream version 8.17.0~rc3
+  * d/copyright: Drop lib/curl_des.c and lib/curl_des.h, removed upstream
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 29 Oct 2025 18:33:28 +0000
+
+curl (8.17.0~rc2-1) unstable; urgency=medium
+
+  * New upstream version 8.17.0~rc2
+  * Revert "d/salsa-ci: enable ARM build test"
+  * Drop patches merged upstream:
+    - setopt-accept-_SSL_VERIFYHOST-set-to-2L.patch
+    - asyn-thrdd-drop-pthread_cancel.patch
+    - setopt-make-CURLOPT_MAXREDIRS-accept-1-again.patch
+  * Refresh patches:
+    - ZZZgnutls-build.patch
+    - build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a.patch
+  * d/copyright: Drop entry for lib/krb5.c, file was removed
+  * d/libcurl*.symbols: Add new symbols curl_multi_notify_disable and
+    curl_multi_notify_enable
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 20 Oct 2025 19:05:21 +0100
+
+curl (8.16.0-4) unstable; urgency=medium
+
+  * debian/patches/setopt-make-CURLOPT_MAXREDIRS-accept-1-again.patch: import
+    from upstream. (Closes: #1117593)
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Wed, 08 Oct 2025 13:05:07 -0300
+
+curl (8.16.0-3) unstable; urgency=medium
+
+  * d/control: Fix required versions of libnghttp3 and libngtcp2 packages.
+     - Append "~" to the end of the version, for a backports-friendly package.
+     - Add an explicit dependency on libnghttp3-9 and libngtcp2-16, as
+       otherwise dpkg picks a lower version as a dependency, but we need
+       newer versions for HTTP/3.
+     - Bump the version requirement for libnghttp3-dev to 1.11.0.
+  * d/control: wrap-and-sort -taf
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 07 Oct 2025 20:47:19 +0100
+
+curl (8.16.0-2) unstable; urgency=medium
+
+  [ Carlos Henrique Lima Melara ]
+  * d/rules: use DEB_DISTRIBUTION to add configure flags for experimental
+  * d/watch-rc: keep a watch file for curl RC releases
+
+  [ Marcos Felipe de Almeida Souza ]
+  * d/patches: Add upstream commits to fix regressions
+    - async-thrdd-drop-pthread_cancel.patch: Upstream changes
+    - setopt-accept-_SSL_VERIFYHOST-set-to-2L.patch: Upstream changes
+
+  [ Samuel Henrique ]
+  * Build OpenSSL HTTP/3 support with ngtcp2
+    - Add B-D on libngtcp2-crypto-ossl-dev (>= 1.16.0)
+    - Add Depends on libngtcp2-crypto-ossl-dev (>= 1.16.0) and
+      libngtcp2-dev (>= 1.16.0) in the OpenSSL -dev package
+    - Bump libngtcp2-dev and libngtcp2-crypto-gnutls-dev Depends in the
+      GnuTLS -dev package to >= 1.16.0
+    - Drop --with-openssl-quic configure flag in OpenSSL build
+    - Set --with-ngtcp2 and --with-nghttp3 configure flag for both builds
+      (OpenSSL and GnuTLS)
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 02 Oct 2025 22:29:47 +0100
+
+curl (8.16.0-1) unstable; urgency=medium
+
+  * d/watch: Point to GitHub for GA releases
+  * New upstream version 8.16.0
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 10 Sep 2025 08:40:58 +0100
+
+curl (8.16.0~rc3-1) unstable; urgency=medium
+
+  * New upstream version 8.16.0~rc3.
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Thu, 04 Sep 2025 21:26:46 -0300
+
+curl (8.16.0~rc2-2) unstable; urgency=medium
+
+  * d/t/common-upstream-tests: Invoke dh clean, not override_dh_auto_clean.
+
+ -- Sergio Durigan Junior <sergiodj@debian.org>  Fri, 29 Aug 2025 23:37:58 -0400
+
+curl (8.16.0~rc2-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 8.16.0~rc2
+  * d/watch: Point to rc releases and pick tar.xz tarballs
+  * Update patches:
+    - 11_omit-directories-from-config.patch: Upstream changes in Makefile
+    - ZZZgnutls-build.patch: Upstream changes in Makefile
+    - build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a.patch: Update
+      context
+  * d/libcurl*.symbols: New symbols "curl_multi_get_offt" and
+    "curl_ws_start_frame"
+  * d/rules: Add missing backslash to escape newline
+  * d/rules: Remove "--cache-files" from curl-config
+
+  [ Sergio Durigan Junior ]
+  * Use d/clean instead of overriding dh_auto_clean
+  * d/rules:
+    - Enable symbol hiding when compiling curl.
+    - New variables with_{openssl,gnutls}.
+    - Specify --cache-file when invoking configure.
+    - Expand removal of aclocal to debian/tmp*/ directories.
+    - Use "define" to create a template of the configure step.
+    - Use "define" to create a template of the build step.
+    - Use "define" to create a template of the test step.
+    - Use "define" to create a template of the install step.
+
+  [ Aquila Macedo ]
+  * d/copyright: sync licenses
+  * d/copyright: add myself
+  * d/lrc.config: add initial exclusions to suppress false positives
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 25 Aug 2025 23:21:04 +0100
+
+curl (8.15.0-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 8.15.0
+  * d/patches:
+    - Drop patches merged upstream
+    - build-Divide-mit-krb5-gssapi...: Refresh patch
+    - ZZZgnutls-build.patch: Update patch
+  * d/copyright:
+    - Update with renamed and removed files
+    - Remove dropped files build-openssl.bat and checksrc.bat
+
+  [ Carlos Henrique Lima Melara ]
+  * d/patches/:
+    - Refresh patches
+    - Rebase patches against new upstream version
+  * d/libcurl4-doc.docs: remove docs/examples/README.md, it's in .examples *
+
+  [ Aquila Macedo ]
+  * d/tests/common-upstream-tests: centralize common build steps
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 10 Aug 2025 16:38:32 +0100
+
+curl (8.14.1-2) unstable; urgency=medium
+
+  * gbp pq import/export: Updated hunks offsets
+  * d/patches:
+    - tool_getparam_fix_ftp_pasv.patch: New upstream patch to fix regression
+      in --ftp-pasv
+    - curl_path_make_SFTP_handle_a_path.patch: New patch to fix longstanding
+      regression on paths /~ for SFTP
+    - tool_operate_fix_return_code_when_retry_is_used_but_not_triggered.patch:
+      New patch to fix regression from 8.14.1
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 11 Jun 2025 19:18:58 +0100
+
+curl (8.14.1-1) unstable; urgency=medium
+
+  * New upstream version 8.14.1
+    - Fix CVE-2025-5399: WebSocket endless loop
+  * d/p/multi_fix_add_handle_resizing: Drop patch, merged in 8.14.1
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 04 Jun 2025 08:21:05 +0100
+
+curl (8.14.0-1) unstable; urgency=medium
+
+  * New upstream version 8.14.0
+  * Drop vendored wcurl now that it's in the upstream tarball
+  * d/copyright: Update for upstream moved files:
+    - They were moved from lib/ to lib/curlx/:
+       ~ lib/curlx/version_win32.c
+       ~ lib/curlx/version_win32.h
+       ~ lib/curlx/inet_pton.c
+  * d/patches:
+    - Refresh patches
+    - ZZZgnutls-build.patch: Update to also work with tests/tunit makefile
+    - multi_fix_add_handle_resizing.patch: New patch to fix regression
+    - Drop patches merged upstream:
+      ~ autotools_install_shell_completion_files_on_cross_build.patch
+      ~ scripts_completion_pl_sort_the_completion_file_for_all_shells.patch
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 28 May 2025 19:26:28 +0100
+
+curl (8.13.0-5) unstable; urgency=medium
+
+  * d/t/upstream-*: ensure clean build by calling override_dh_auto_clean
+  * d/salsa-ci: enable ARM build test
+
+ -- Aquila Macedo Costa <aquilamacedo@riseup.net>  Fri, 25 Apr 2025 21:31:31 +0100
+
+curl (8.13.0-4) unstable; urgency=medium
+
+  * d/tests/control: Install curl for the openssl tests
+  * d/p/autotools_install_shell_completion_files_on_cross_build: Fix FTCBFS,
+    thanks to Helmut Grohne (closes: #1103938)
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 24 Apr 2025 00:02:26 +0100
+
+curl (8.13.0-3) unstable; urgency=medium
+
+  [ Carlos Henrique Lima Melara ]
+  * d/t/upstream-tests-*: use correct version of curl in tests
+
+  [ наб ]
+  * d/README.source: delete (false)
+
+  [ Matheus Polkorny ]
+  * d/copyright: Update to reflect upstream copyright changes
+
+  [ Samuel Henrique ]
+  * Update wcurl to v2025.04.20
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 21 Apr 2025 00:23:44 +0100
+
+curl (8.13.0-2) unstable; urgency=medium
+
+  * Link with OpenSSL for the curl CLI (closes: #1095986)
+  * d/control: Recommends bash-completion for curl binary package
+  * d/p/scripts_completion_pl..: New patch to fix build reprocibility
+  * d/curl.NEWS: Add an entry to mention switch back to OpenSSL
+
+ -- Samuel Henrique <samueloph@debian.org>  Sun, 06 Apr 2025 22:13:18 +0100
+
+curl (8.13.0-1) unstable; urgency=medium
+
+  * New upstream version 8.13.0
+  * Update Standards-Version to 4.7.2
+  * Ship shell completions on crossbuilds. Upstream changed the way they are
+    generated and it doesn't need to call the compiled binary anymore.
+  * d/copyright: Drop removed files genroot.sh and genserv.sh
+  * d/watch: Point to GitHub for GA releases
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 02 Apr 2025 09:12:40 +0100
+
+curl (8.13.0~rc3-1) unstable; urgency=medium
+
+  * New upstream version 8.13.0~rc3
+  * d/p/runtests-feat-filter.patch: Drop patch, merged upstream
+  * d/watch: Properly identify RC release IDs (rc1, rc2...)
+
+  [ Vladimir Petko ]
+  * Revert Ubuntu compatibility changes for building with libssh
+    (closes: #1079076)
+
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 26 Mar 2025 18:37:55 +0000
+
+curl (8.13.0~rc2-2) unstable; urgency=medium
+
+  * Team upload.
+  * d/p/runtests-feat-filter.patch: Import upstream patch for feature-based
+    test filtering
+  * d/rules:
+    - Add pkg.curl.debug profile support
+    - Add 'feat:debug' as option to the TESTS_GENERAL_PARAMETERS in debug
+      profile
+  * d/tests:
+    - Add new autopkgtests for event-based tests
+    - Redirect specific autopkgtest outputs to artifacts to reduce build log
+      noise
+    - Reduce override_dh_auto_test verbosity in the event-based autopkgtests
+
+ -- Aquila Macedo Costa <aquilamacedo@riseup.net>  Mon, 17 Mar 2025 21:04:08 -0300
+
+curl (8.13.0~rc2-1) unstable; urgency=medium
+
+  * New upstream version 8.13.0~rc2
+    - gnutls: fix use of pkcs11 urls for keys/certs (closes: #1077060)
+    - gnutls: set priority via --ciphers (closes: #1095981)
+  * d/p/build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a: Refresh patch
+  * d/p/fix-managen-script: Drop merged patch
+  * d/watch: Point to rc releases and pick tar.xz tarballs
+
+ -- Samuel Henrique <samueloph@debian.org>  Mon, 17 Mar 2025 16:40:32 +0000
+
+curl (8.12.1-3) unstable; urgency=medium
+
+  [ Carlos Henrique Lima Melara ]
+  * d/p/fix-managen-script: cherry-pick from upstream to fix manpage
+
+  [ Samuel Henrique ]
+  * Update wcurl to 2025.02.24
+
+ -- Samuel Henrique <samueloph@debian.org>  Tue, 25 Feb 2025 19:30:46 +0000
+
+curl (8.12.1-2) unstable; urgency=medium
+
+  * Revert "Use valgrind in tests"
+    valgrind is not available on all archs, and there were too many test
+    failures on some that have it.
+    We should instead enable valgrind on experimental first, then address
+    those issues, and only then do it on unstable.
+  * d/copyright: Remove entry for projects/build-wolfssl.bat, removed file
+
+ -- Samuel Henrique <samueloph@debian.org>  Fri, 14 Feb 2025 21:27:50 +0000
+
+curl (8.12.1-1) unstable; urgency=medium
+
+  * New upstream version 8.12.1.
+  * Revert "d/copyright: exclude Windows related stuff from upstream tarball".
+    Not needed when using upstream releases or daily snapshots.
+  * Use valgrind in tests.
+  * d/control: libcurl4-openssl-dev: Depend on libnghttp3-dev.
+  * d/rules: Build OpenSSL with HTTP3 support.
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 13 Feb 2025 22:17:23 +0000
+
+curl (8.12.0+git20250209.89ed161+ds-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * d/curl.NEWS: Update wcurl's list of features
+
+  [ Carlos Henrique Lima Melara ]
+  * New upstream version 8.12.0+git20250209.89ed161+ds.
+  * d/copyright: update maintainer's copyright years.
+  * d/libcurl*.symbols: add symbols introduced in 8.12.0.
+  * d/patches/: rebase patches against 8.12.0
+      - async_thread_avoid_closing_eventfd_twice.patch: drop, present in 8.12.0.
+      - sectransp_free_certificate_on_error.patch: drop, present in 8.12.0.
+
+ -- Carlos Henrique Lima Melara <charlesmelara@riseup.net>  Sun, 09 Feb 2025 00:08:26 +0100
+
+curl (8.11.1-1) unstable; urgency=medium
+
+  [ Samuel Henrique ]
+  * New upstream version 8.11.1
+    - Fix CVE-2024-11053: netrc and redirect credential leak (closes: #1089682)
+  * Update wcurl to 2024.12.08
+  * New patches:
+    - async_thread_avoid_closing_eventfd_twice: Fix file descriptor issue with eventfd
+    - sectransp_free_certificate_on_error: Fix memory leak
+  * Refresh patches:
+    - ZZZgnutls-build
+    - build-Divide-mit-krb5-gssapi-link-flags-between-LDFLAGS-a
+  * d/p/11_omit-directories-from-config: Update patch
+  * Drop merged patches:
+    - cmdline_ech_md_formatting_cleanups
+    - duphandle_also_init_netrc
+    - libssh_when_using_IPv6_numerical_address_add_brackets
+    - netrc_support_large_file_longer_lines_longer_tokens
+    - setopt_fix_CURLOPT_HTTP_CONTENT_DECODING
+  * d/p/Remove-curl-s-LDFLAGS-from-curl-config-static-libs: Remove patch, not needed anymore
+
+  [ Carlos Henrique Lima Melara ]
+  * d/t/upstream-tests-*: test gnutls backend against installed curl
+  * d/t/control: install curl on upstream-tests-gnutls and remove on openssl
+
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 12 Dec 2024 21:38:04 +0000
+
+curl (8.11.0-1) unstable; urgency=medium
 
   [ Samuel Henrique ]
   * New upstream version 8.11.0
   * Fix CVE-2024-9681: HSTS subdomain overwrites parent cache entry
+   (closes: #1086804)
   * Update patches for the new release
   * d/rules: Drop '--enable-websockets', it's enabled by default now
   * d/libcurl*.symbols: Remove HIDDEN@HIDDEN 7.16.2
@@ -18,26 +438,21 @@ curl (8.11.0-0deepin1) unstable; urgency=medium
   * d/control: move libldap2-dev to Depends and use newer libldap-dev name
   * d/control: move libkrb5-dev from Suggests to Depends for -dev packages
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Tue, 19 Nov 2024 12:08:33 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Sat, 09 Nov 2024 17:34:22 +0000
 
-curl (8.10.1-0deepin2) unstable; urgency=medium
+curl (8.10.1-2) unstable; urgency=medium
 
-  * libcurl4 should not replaces itself.
+  * d/patches/gtls_add_p12_format_support.patch: New upstream patch for P12
+    support
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 17:18:39 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Thu, 10 Oct 2024 23:22:24 +0100
 
-curl (8.10.1-0deepin1) unstable; urgency=medium
+curl (8.10.1-1) unstable; urgency=medium
 
-  * New upstream version 8.10.1.
-  * Refresh ZZZgnutls-build.patch.
+  * New upstream version 8.10.1
+  * d/p/ZZZgnutls-build.patch: Update patch
 
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 15:11:28 +0800
-
-curl (8.10.0-2deepin1) unstable; urgency=medium
-
-  * Revert t64.
-
- -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 18 Sep 2024 14:30:44 +0800
+ -- Samuel Henrique <samueloph@debian.org>  Wed, 18 Sep 2024 07:27:29 +0100
 
 curl (8.10.0-2) unstable; urgency=medium
 

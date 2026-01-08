@@ -10,10 +10,8 @@ set -e
 # openssl tests run against the system's installed curl.
 
 export DEB_BUILD_PROFILES="pkg.curl.openssl-only"
+export TESTS_GENERAL_PARAMETERS="-c /usr/bin/curl -vc /usr/bin/curl"
 export VERBOSE=1
-TESTS_GENERAL_PARAMETERS="-c /usr/bin/curl"
-TESTS_GENERAL_PARAMETERS="-vc /usr/bin/curl"
-export TESTS_GENERAL_PARAMETERS
 
 # Don't skip tests which fail on ipv6-only environments for autopkgtests.
 # I'm not aware of runners with this configuration for debci, and a retry
@@ -23,18 +21,7 @@ export TESTS_GENERAL_PARAMETERS
 # https://github.com/curl/curl/issues/10682
 export TESTS_FAILS_ON_IPV6_ONLY_MACHINES=""
 
-echo "dh_update_autotools_config"
-dh_update_autotools_config
+# Suffix used to name build log files for this specific test scenario
+export SUFFIX="openssl"
 
-echo "dh_autoreconf"
-dh_autoreconf
-
-echo "debian/rules override_dh_auto_configure "
-debian/rules override_dh_auto_configure
-
-echo "debian/rules override_dh_auto_build"
-debian/rules override_dh_auto_build
-
-echo "debian/rules override_dh_auto_test"
-debian/rules override_dh_auto_test
-
+. debian/tests/common-upstream-tests

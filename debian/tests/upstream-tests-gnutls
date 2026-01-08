@@ -10,6 +10,7 @@ set -e
 # gnutls tests run against the built curl and libcurl rather than the installed
 # one as we don't ship a curl linked against gnutls (only gnutls libraries).
 
+
 export DEB_BUILD_PROFILES="pkg.curl.gnutls-only"
 export VERBOSE=1
 
@@ -21,17 +22,7 @@ export VERBOSE=1
 # https://github.com/curl/curl/issues/10682
 export TESTS_FAILS_ON_IPV6_ONLY_MACHINES=""
 
-echo "dh_update_autotools_config"
-dh_update_autotools_config
+# Suffix used to name build log files for this specific test scenario
+export SUFFIX="gnutls"
 
-echo "dh_autoreconf"
-dh_autoreconf
-
-echo "debian/rules override_dh_auto_configure "
-debian/rules override_dh_auto_configure
-
-echo "debian/rules override_dh_auto_build"
-debian/rules override_dh_auto_build
-
-echo "debian/rules override_dh_auto_test"
-debian/rules override_dh_auto_test
+. debian/tests/common-upstream-tests
