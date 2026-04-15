@@ -9,3 +9,7 @@ setopt_fix_CURLOPT_HTTP_CONTENT_DECODING.patch
 netrc_support_large_file_longer_lines_longer_tokens.patch
 cmdline_ech_md_formatting_cleanups.patch
 libssh_when_using_IPv6_numerical_address_add_brackets.patch
+
+# CVE-2026-3784: proxy credential reuse vulnerability
+cve_2026_3784.patch
+cve_2026_3783.patch
