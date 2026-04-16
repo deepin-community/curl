@@ -1,0 +1,39 @@
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Tue, 4 Mar 2025 23:45:02 +0100
+Subject: [PATCH] Negotiate: fix wrong connection reuse
+
+Fix CVE-2026-1965: When asked to do a Negotiate-authenticated request,
+libcurl could reuse an existing connection to the same server that was
+already authenticated with different credentials.
+
+Bug: https://curl.se/docs/CVE-2026-1965.html
+Upstream: https://github.com/curl/curl/commit/34fa034d9a390c4bd65e2d05262755ec8646ac12
+---
+ lib/url.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -626,8 +626,21 @@ Curl_addrinfo *Curl_getaddrinfo(struct Curl_easy *data,
+    different otherwise we cannot be sure the connection is reusable. */
+ static bool negotiate_auth_may_reuse(struct Curl_easy *data,
+                                      struct connectdata *conn,
+-                                     struct negotiatedata *nego)
++                                     struct negotiatedata *nego,
++                                     struct negotiatedata *proxy_nego)
+ {
++  /* if the previous connection was authenticated with Negotiate and the
++     new request also uses Negotiate, make sure we use the same credentials
++     or we might use the wrong connection */
++  if(nego->context) {
++    /* this connection already has a Negotiate context */
++    if(proxy_nego->context) {
++      /* proxy authentication already done */
++      if(strcmp(nego->token, proxy_nego->token))
++        return FALSE;
++    }
++  }
++  
+   (void)data;
+   (void)conn;
+   return TRUE;

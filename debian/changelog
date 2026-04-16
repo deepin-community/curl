@@ -1,3 +1,17 @@
+curl (8.11.0-0deepin3) unstable; urgency=medium
+
+  * Fix CVE-2026-1965: Negotiate wrong connection reuse
+  * Fix CVE-2025-14819: SSL CA cache issue with CURLSSLOPT_NO_PARTIALCHAIN
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 17 Apr 2026 05:30:00 +0800
+
+curl (8.11.0-0deepin2) unstable; urgency=medium
+
+  * Fix CVE-2026-3784: proxy credential reuse vulnerability
+  * Fix CVE-2026-3783: OAuth2 bearer token leak on redirect
+
+ -- deepin-ci-robot <packages@deepin.org>  Wed, 15 Apr 2026 16:37:37 +0800
+
 curl (8.11.0-0deepin1) unstable; urgency=medium
 
   [ Samuel Henrique ]

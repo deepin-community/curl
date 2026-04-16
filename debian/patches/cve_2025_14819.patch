@@ -1,0 +1,45 @@
+From: Daniel Stenberg <daniel@haxx.se>
+Date: Wed, 17 Dec 2025 10:54:16 +0100
+Subject: [PATCH] openssl: toggling CURLSSLOPT_NO_PARTIALCHAIN makes a
+ different CA cache
+
+Fix CVE-2025-14819: When toggling the CURLSSLOPT_NO_PARTIALCHAIN option
+with CURLOPT_SSL_OPTIONS, it would not take effect in the CA cache,
+leading to the wrong verification.
+
+Bug: https://curl.se/docs/CVE-2025-14819.html
+Upstream: https://github.com/curl/curl/commit/cd046f6c93b39d673a58c1864
+---
+ lib/vtls/openssl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/lib/vtls/openssl.c
++++ b/lib/vtls/openssl.c
+@@ -3196,6 +3196,7 @@ struct ossl_x509_share {
+   X509_STORE *store;    /* cached X509 store or NULL if none */
+   struct curltime time; /* when the cached store was created */
+   unsigned char ssl_options; /* SSL options bitmask for the cached store */
++  bool no_partialchain; /* NO_PARTIALCHAIN option state */
+ };
+ 
+ static struct ossl_x509_share *ossl_share;
+@@ -3575,6 +3576,11 @@ static X509_STORE *ossl_ca_cache_get_se
+   if(!share->store)
+     return NULL;
+ 
++  if(share->no_partialchain != no_partialchain) {
++    /* Option changed, cache is invalid */
++    return NULL;
++  }
++
+   if(share->store) {
+     /* The store already holds a reference to the CA certificates */
+     X509_STORE_up_ref(share->store);
+@@ -3613,6 +3619,7 @@ static void ossl_ca_cache_set_store(str
+   share->store = store;
+   share->time = Curl_now();
+   share->ssl_options = ssl_options;
++  share->no_partialchain = no_partialchain;
+   Curl_mutex_release(&ossl_share_lock);
+ }
+ #endif
