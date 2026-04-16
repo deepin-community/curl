@@ -13,3 +13,8 @@ libssh_when_using_IPv6_numerical_address_add_brackets.patch
 # CVE-2026-3784: proxy credential reuse vulnerability
 cve_2026_3784.patch
 cve_2026_3783.patch
+
+# CVE-2026-1965: Negotiate wrong connection reuse
+cve_2026_1965.patch
+# CVE-2025-14819: SSL CA cache issue with CURLSSLOPT_NO_PARTIALCHAIN
+cve_2025_14819.patch
