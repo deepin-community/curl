@@ -1,3 +1,14 @@
+curl (8.11.0-0deepin2) unstable; urgency=high
+
+  * Fix multiple CVEs for curl 8.11.0
+    - CVE-2025-0167: netrc default with no credentials
+    - CVE-2025-10148: WebSocket mask reuse vulnerability
+    - CVE-2025-13034: QUIC TLS GnuTLS verification bypass
+    - CVE-2026-3783: OAuth2 bearer token leak on redirect
+    - CVE-2026-3784: Proxy credential reuse vulnerability
+
+ -- lichenggang <lichenggang@uniontech.com>  Tue, 21 Apr 2026 21:44:48 +0800
+
 curl (8.11.0-0deepin1) unstable; urgency=medium
 
   [ Samuel Henrique ]

@@ -9,3 +9,10 @@ setopt_fix_CURLOPT_HTTP_CONTENT_DECODING.patch
 netrc_support_large_file_longer_lines_longer_tokens.patch
 cmdline_ech_md_formatting_cleanups.patch
 libssh_when_using_IPv6_numerical_address_add_brackets.patch
+
+# Security fixes for curl 8.11.0
+cve-2025-0167.patch
+cve-2025-10148.patch
+cve-2025-13034.patch
+cve-2026-3783.patch
+cve-2026-3784.patch
