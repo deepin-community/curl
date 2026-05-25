@@ -1,3 +1,12 @@
+curl (8.11.0-0deepin3) unstable; urgency=high
+
+  * Fix CVE-2026-6276: stale custom cookie host causes cookie leak
+    When a custom Host: header is set for an HTTP request and a second
+    request is done using the same easy handle without the custom Host:
+    header, cookies meant for the first host could be leaked to the second.
+
+ -- hudeng <hudeng@deepin.org>  Sun, 25 May 2026 16:15:00 +0800
+
 curl (8.11.0-0deepin2) unstable; urgency=high
 
   * Fix multiple CVEs for curl 8.11.0
