@@ -16,3 +16,6 @@ cve-2025-10148.patch
 cve-2025-13034.patch
 cve-2026-3783.patch
 cve-2026-3784.patch
+
+# Security fix
+cve-2026-6276.patch
