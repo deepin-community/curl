@@ -1,3 +1,14 @@
+curl (8.11.0-0deepin4) unstable; urgency=high
+
+  * Fix CVE-2026-5773: SMB connection reuse may use wrong share
+    libcurl might in some circumstances reuse the wrong connection for
+    SMB(S) transfers. Due to a logical error in connection reuse logic,
+    a transfer could wrongfully reuse an existing SMB connection to the
+    same server that was using a different 'share', potentially leading
+    to downloading or uploading data to the wrong location.
+
+ -- deepin-ci-robot <packages@deepin.org>  Tue, 02 Jun 2026 22:30:00 +0800
+
 curl (8.11.0-0deepin3) unstable; urgency=high
 
   * Fix CVE-2026-6276: stale custom cookie host causes cookie leak
