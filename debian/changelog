@@ -1,3 +1,12 @@
+curl (8.11.0-0deepin26) unstable; urgency=high
+
+  * Batch fix 10 CVE vulnerabilities:
+    CVE-2026-8932, CVE-2026-9545, CVE-2026-9547, CVE-2026-11352,
+    CVE-2026-8924, CVE-2026-8925, CVE-2026-8926, CVE-2026-9546,
+    CVE-2026-11856, CVE-2026-8927, CVE-2026-9079
+
+ -- deepin-ci-robot <packages@deepin.org>  Fri, 10 Jul 2026 04:43:14 +0800
+
 curl (8.11.0-0deepin4) unstable; urgency=high
 
   * Fix CVE-2026-5773: SMB connection reuse may use wrong share
