@@ -121,6 +121,9 @@ struct SingleRequest {
 #endif
 #ifndef CURL_DISABLE_COOKIES
   unsigned char setcookies;
+  char *cookiehost; /* the host name for which cookies are set, via
+                       a custom Host: header - properly scoped for the
+                       single request */
 #endif
   BIT(header);        /* incoming data has HTTP header */
   BIT(done);          /* request is done, e.g. no more send/recv should

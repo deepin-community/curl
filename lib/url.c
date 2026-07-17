@@ -129,11 +129,7 @@
 #define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 #endif
 
-#ifdef USE_NGHTTP2
-static void data_priority_cleanup(struct Curl_easy *data);
-#else
-#define data_priority_cleanup(x)
-#endif
+
 
 /* Some parts of the code (e.g. chunked encoding) assume this buffer has at
  * more than just a few bytes to play with. Do not let it become too small or
@@ -297,8 +293,6 @@ CURLcode Curl_close(struct Curl_easy **datap)
   Curl_resolver_cancel(data);
   Curl_resolver_cleanup(data->state.async.resolver);
 
-  data_priority_cleanup(data);
-
   /* No longer a dirty share, if it exists */
   if(data->share) {
     Curl_share_lock(data, CURL_LOCK_DATA_SHARE, CURL_LOCK_ACCESS_SINGLE);
@@ -317,7 +311,7 @@ CURLcode Curl_close(struct Curl_easy **datap)
   Curl_safefree(data->state.aptr.ref);
   Curl_safefree(data->state.aptr.host);
 #ifndef CURL_DISABLE_COOKIES
-  Curl_safefree(data->state.aptr.cookiehost);
+  Curl_safefree(data->req.cookiehost);
 #endif
 #ifndef CURL_DISABLE_RTSP
   Curl_safefree(data->state.aptr.rtsp_transport);
@@ -678,34 +672,18 @@ proxy_info_matches(const struct proxy_info *data,
 {
   if((data->proxytype == needle->proxytype) &&
      (data->port == needle->port) &&
-     strcasecompare(data->host.name, needle->host.name))
+     strcasecompare(data->host.name, needle->host.name)) {
+
+    if(Curl_timestrcmp(data->user, needle->user) ||
+       Curl_timestrcmp(data->passwd, needle->passwd))
+      return FALSE;
     return TRUE;
-
+  }
   return FALSE;
-}
-
-static bool
-socks_proxy_info_matches(const struct proxy_info *data,
-                         const struct proxy_info *needle)
-{
-  if(!proxy_info_matches(data, needle))
-    return FALSE;
-
-  /* the user information is case-sensitive
-     or at least it is not defined as case-insensitive
-     see https://datatracker.ietf.org/doc/html/rfc3986#section-3.2.1 */
-
-  /* curl_strequal does a case insensitive comparison,
-     so do not use it here! */
-  if(Curl_timestrcmp(data->user, needle->user) ||
-     Curl_timestrcmp(data->passwd, needle->passwd))
-    return FALSE;
-  return TRUE;
 }
 #else
 /* disabled, will not get called */
 #define proxy_info_matches(x,y) FALSE
-#define socks_proxy_info_matches(x,y) FALSE
 #endif
 
 /* A connection has to have been idle for a shorter time than 'maxage_conn'
@@ -972,7 +950,7 @@ static bool url_match_conn(struct connectdata *conn, void *userdata)
     return FALSE;
 
   if(needle->bits.socksproxy &&
-    !socks_proxy_info_matches(&needle->socks_proxy,
+    !proxy_info_matches(&needle->socks_proxy,
                               &conn->socks_proxy))
     return FALSE;
 
@@ -3836,96 +3814,6 @@ CURLcode Curl_init_do(struct Curl_easy *data, struct connectdata *conn)
 }
 
 #if defined(USE_HTTP2) || defined(USE_HTTP3)
-
-#ifdef USE_NGHTTP2
-
-static void priority_remove_child(struct Curl_easy *parent,
-                                  struct Curl_easy *child)
-{
-  struct Curl_data_prio_node **pnext = &parent->set.priority.children;
-  struct Curl_data_prio_node *pnode = parent->set.priority.children;
-
-  DEBUGASSERT(child->set.priority.parent == parent);
-  while(pnode && pnode->data != child) {
-    pnext = &pnode->next;
-    pnode = pnode->next;
-  }
-
-  DEBUGASSERT(pnode);
-  if(pnode) {
-    *pnext = pnode->next;
-    free(pnode);
-  }
-
-  child->set.priority.parent = 0;
-  child->set.priority.exclusive = FALSE;
-}
-
-CURLcode Curl_data_priority_add_child(struct Curl_easy *parent,
-                                      struct Curl_easy *child,
-                                      bool exclusive)
-{
-  if(child->set.priority.parent) {
-    priority_remove_child(child->set.priority.parent, child);
-  }
-
-  if(parent) {
-    struct Curl_data_prio_node **tail;
-    struct Curl_data_prio_node *pnode;
-
-    pnode = calloc(1, sizeof(*pnode));
-    if(!pnode)
-      return CURLE_OUT_OF_MEMORY;
-    pnode->data = child;
-
-    if(parent->set.priority.children && exclusive) {
-      /* exclusive: move all existing children underneath the new child */
-      struct Curl_data_prio_node *node = parent->set.priority.children;
-      while(node) {
-        node->data->set.priority.parent = child;
-        node = node->next;
-      }
-
-      tail = &child->set.priority.children;
-      while(*tail)
-        tail = &(*tail)->next;
-
-      DEBUGASSERT(!*tail);
-      *tail = parent->set.priority.children;
-      parent->set.priority.children = 0;
-    }
-
-    tail = &parent->set.priority.children;
-    while(*tail) {
-      (*tail)->data->set.priority.exclusive = FALSE;
-      tail = &(*tail)->next;
-    }
-
-    DEBUGASSERT(!*tail);
-    *tail = pnode;
-  }
-
-  child->set.priority.parent = parent;
-  child->set.priority.exclusive = exclusive;
-  return CURLE_OK;
-}
-
-#endif /* USE_NGHTTP2 */
-
-#ifdef USE_NGHTTP2
-static void data_priority_cleanup(struct Curl_easy *data)
-{
-  while(data->set.priority.children) {
-    struct Curl_easy *tmp = data->set.priority.children->data;
-    priority_remove_child(data, tmp);
-    if(data->set.priority.parent)
-      Curl_data_priority_add_child(data->set.priority.parent, tmp, FALSE);
-  }
-
-  if(data->set.priority.parent)
-    priority_remove_child(data->set.priority.parent, data);
-}
-#endif
 
 void Curl_data_priority_clear_state(struct Curl_easy *data)
 {

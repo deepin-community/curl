@@ -34,7 +34,11 @@ EXTRA_DIST = Makefile.mk config-win32.h config-win32ce.h config-plan9.h \
  $(CMAKE_DIST) setup-win32.h Makefile.soname optiontable.pl libcurl.def \
  $(CHECKSRC_DIST)
 
+if GNUTLSBUILD
+lib_LTLIBRARIES = libcurl-gnutls.la
+else
 lib_LTLIBRARIES = libcurl.la
+endif
 
 if BUILD_UNITTESTS
 noinst_LTLIBRARIES = libcurlu.la
@@ -82,59 +86,115 @@ endif
 libcurl_unity.c: $(top_srcdir)/scripts/mk-unity.pl $(CSOURCES)
 	@PERL@ $(top_srcdir)/scripts/mk-unity.pl $(srcdir) $(CSOURCES) --exclude $(curl_EXCLUDE) > libcurl_unity.c
 
+if GNUTLSBUILD
+nodist_libcurl_gnutls_la_SOURCES = libcurl_unity.c
+libcurl_gnutls_la_SOURCES = $(curl_EXCLUDE)
+nodist_libcurlu_la_SOURCES = libcurl_unity.c
+libcurlu_la_SOURCES = $(curl_EXCLUDE)
+else
 nodist_libcurl_la_SOURCES = libcurl_unity.c
 libcurl_la_SOURCES = $(curl_EXCLUDE)
 nodist_libcurlu_la_SOURCES = libcurl_unity.c
 libcurlu_la_SOURCES = $(curl_EXCLUDE)
+endif
 CLEANFILES = libcurl_unity.c
+else
+if GNUTLSBUILD
+libcurl_gnutls_la_SOURCES = $(CSOURCES) $(HHEADERS)
+libcurlu_la_SOURCES = $(CSOURCES) $(HHEADERS)
 else
 libcurl_la_SOURCES = $(CSOURCES) $(HHEADERS)
 libcurlu_la_SOURCES = $(CSOURCES) $(HHEADERS)
 endif
+endif
 
+if GNUTLSBUILD
+libcurl_gnutls_la_CPPFLAGS_EXTRA =
+libcurl_gnutls_la_LDFLAGS_EXTRA =
+libcurl_gnutls_la_CFLAGS_EXTRA =
+else
 libcurl_la_CPPFLAGS_EXTRA =
 libcurl_la_LDFLAGS_EXTRA =
 libcurl_la_CFLAGS_EXTRA =
+endif
 
 if CURL_LT_SHLIB_USE_VERSION_INFO
+if GNUTLSBUILD
+libcurl_gnutls_la_LDFLAGS_EXTRA += $(VERSIONINFO)
+else
 libcurl_la_LDFLAGS_EXTRA += $(VERSIONINFO)
+endif
 endif
 
 if CURL_LT_SHLIB_USE_NO_UNDEFINED
+if GNUTLSBUILD
+libcurl_gnutls_la_LDFLAGS_EXTRA += -no-undefined
+else
 libcurl_la_LDFLAGS_EXTRA += -no-undefined
+endif
 endif
 
 if CURL_LT_SHLIB_USE_MIMPURE_TEXT
+if GNUTLSBUILD
+libcurl_gnutls_la_LDFLAGS_EXTRA += -mimpure-text
+else
 libcurl_la_LDFLAGS_EXTRA += -mimpure-text
+endif
 endif
 
 if CURL_LT_SHLIB_USE_VERSIONED_SYMBOLS
+if GNUTLSBUILD
+libcurl_gnutls_la_LDFLAGS_EXTRA += -Wl,--version-script=libcurl.vers
+else
 libcurl_la_LDFLAGS_EXTRA += -Wl,--version-script=libcurl.vers
+endif
 else
 # if symbol-hiding is enabled, hide them!
 if DOING_CURL_SYMBOL_HIDING
+if GNUTLSBUILD
+libcurl_gnutls_la_LDFLAGS_EXTRA += -export-symbols-regex '^curl_.*'
+else
 libcurl_la_LDFLAGS_EXTRA += -export-symbols-regex '^curl_.*'
+endif
 endif
 endif
 
 if USE_CPPFLAG_CURL_STATICLIB
+if GNUTLSBUILD
+libcurl_gnutls_la_CPPFLAGS_EXTRA += -DCURL_STATICLIB
+else
 libcurl_la_CPPFLAGS_EXTRA += -DCURL_STATICLIB
+endif
 else
 if HAVE_WINDRES
+if GNUTLSBUILD
+libcurl_gnutls_la_SOURCES += $(LIB_RCFILES)
+else
 libcurl_la_SOURCES += $(LIB_RCFILES)
+endif
 $(LIB_RCFILES): $(top_srcdir)/include/curl/curlver.h
 endif
 endif
 
 if DOING_CURL_SYMBOL_HIDING
+if GNUTLSBUILD
+libcurl_gnutls_la_CPPFLAGS_EXTRA += -DCURL_HIDDEN_SYMBOLS
+libcurl_gnutls_la_CFLAGS_EXTRA += $(CFLAG_CURL_SYMBOL_HIDING)
+else
 libcurl_la_CPPFLAGS_EXTRA += -DCURL_HIDDEN_SYMBOLS
 libcurl_la_CFLAGS_EXTRA += $(CFLAG_CURL_SYMBOL_HIDING)
 endif
+endif
 
+if GNUTLSBUILD
+libcurl_gnutls_la_CPPFLAGS = $(AM_CPPFLAGS) $(libcurl_gnutls_la_CPPFLAGS_EXTRA)
+libcurl_gnutls_la_LDFLAGS = $(AM_LDFLAGS) $(libcurl_gnutls_la_LDFLAGS_EXTRA) $(CURL_LDFLAGS_LIB) $(LIBCURL_PC_LIBS_PRIVATE)
+libcurl_gnutls_la_CFLAGS = $(AM_CFLAGS) $(libcurl_gnutls_la_CFLAGS_EXTRA)
+else
 libcurl_la_CPPFLAGS = $(AM_CPPFLAGS) $(libcurl_la_CPPFLAGS_EXTRA)
 libcurl_la_LDFLAGS = $(AM_LDFLAGS) $(libcurl_la_LDFLAGS_EXTRA) $(CURL_LDFLAGS_LIB) $(LIBCURL_PC_LIBS_PRIVATE)
 libcurl_la_CFLAGS = $(AM_CFLAGS) $(libcurl_la_CFLAGS_EXTRA)
-
+endif
 libcurlu_la_CPPFLAGS = $(AM_CPPFLAGS) -DCURL_STATICLIB -DUNITTESTS
 libcurlu_la_LDFLAGS = $(AM_LDFLAGS) -static $(LIBCURL_PC_LIBS_PRIVATE)
 libcurlu_la_CFLAGS = $(AM_CFLAGS)

@@ -50,7 +50,7 @@ endif
 LIBS = $(BLANK_AT_MAKETIME)
 
 # Dependencies
-LDADD = $(LIBDIR)/libcurl.la @LIBCURL_PC_LIBS_PRIVATE@
+LDADD = $(LIBDIR)/$(LIBCURL_FILESTUB).la @LIBCURL_PC_LIBS_PRIVATE@
 
 # This might hold -Werror
 CFLAGS += @CURL_CFLAG_EXTRAS@

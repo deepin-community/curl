@@ -1144,15 +1144,7 @@ struct Curl_data_prio_node {
  * TODO: we need to adapt it to the new priority scheme as defined in RFC 9218
  */
 struct Curl_data_priority {
-#ifdef USE_NGHTTP2
-  /* tree like dependencies only implemented in nghttp2 */
-  struct Curl_easy *parent;
-  struct Curl_data_prio_node *children;
-#endif
   int weight;
-#ifdef USE_NGHTTP2
-  BIT(exclusive);
-#endif
 };
 
 /* Timers */
@@ -1331,9 +1323,6 @@ struct UrlState {
     char *rangeline;
     char *ref;
     char *host;
-#ifndef CURL_DISABLE_COOKIES
-    char *cookiehost;
-#endif
 #ifndef CURL_DISABLE_RTSP
     char *rtsp_transport;
 #endif

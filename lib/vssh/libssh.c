@@ -434,6 +434,8 @@ static int myssh_is_known(struct Curl_easy *data)
       keymatch = CURLKHMATCH_OK;
       break;
     case SSH_KNOWN_HOSTS_OTHER:
+      keymatch = CURLKHMATCH_MISMATCH;
+      break;
     case SSH_KNOWN_HOSTS_NOT_FOUND:
     case SSH_KNOWN_HOSTS_UNKNOWN:
     case SSH_KNOWN_HOSTS_ERROR:
@@ -2191,7 +2193,14 @@ static CURLcode myssh_connect(struct Curl_easy *data, bool *done)
     return CURLE_FAILED_INIT;
   }
 
-  rc = ssh_options_set(ssh->ssh_session, SSH_OPTIONS_HOST, conn->host.name);
+  if(conn->bits.ipv6_ip) {
+    char ipv6[MAX_IPADR_LEN];
+    msnprintf(ipv6, sizeof(ipv6), "[%s]", conn->host.name);
+    rc = ssh_options_set(ssh->ssh_session, SSH_OPTIONS_HOST, ipv6);
+  }
+  else
+    rc = ssh_options_set(ssh->ssh_session, SSH_OPTIONS_HOST, conn->host.name);
+
   if(rc != SSH_OK) {
     failf(data, "Could not set remote host");
     return CURLE_FAILED_INIT;

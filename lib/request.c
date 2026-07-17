@@ -119,6 +119,9 @@ void Curl_req_hard_reset(struct SingleRequest *req, struct Curl_easy *data)
   Curl_safefree(req->p.ftp);
   Curl_safefree(req->newurl);
   Curl_client_reset(data);
+#if !defined(CURL_DISABLE_COOKIES)
+  Curl_safefree(req->cookiehost);
+#endif
   if(req->sendbuf_init)
     Curl_bufq_reset(&req->sendbuf);
 

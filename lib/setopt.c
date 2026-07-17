@@ -1146,7 +1146,7 @@ static CURLcode setopt_long(struct Curl_easy *data, CURLoption option,
     /*
      * raw data passed to the application when content encoding is used
      */
-    data->set.http_ce_skip = enabled;
+    data->set.http_ce_skip = !enabled; /* reversed */
     break;
 
 #if !defined(CURL_DISABLE_FTP) || defined(USE_SSH)
@@ -1651,13 +1651,10 @@ static CURLcode setopt_pointers(struct Curl_easy *data, CURLoption option,
 
 #ifdef USE_HTTP2
   case CURLOPT_STREAM_DEPENDS:
-  case CURLOPT_STREAM_DEPENDS_E: {
-    struct Curl_easy *dep = va_arg(param, struct Curl_easy *);
-    if(!dep || GOOD_EASY_HANDLE(dep))
-      return Curl_data_priority_add_child(dep, data,
-                                          option == CURLOPT_STREAM_DEPENDS_E);
+  case CURLOPT_STREAM_DEPENDS_E:
+    /* not doing stream dependencies any longer, but accept options
+     * for backward compatibility */
     break;
-  }
 #endif
 
   default:

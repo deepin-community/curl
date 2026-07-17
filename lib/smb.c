@@ -257,6 +257,8 @@ static int smb_getsock(struct Curl_easy *data, struct connectdata *conn,
                        curl_socket_t *socks);
 static CURLcode smb_parse_url_path(struct Curl_easy *data,
                                    struct connectdata *conn);
+static CURLcode smb_done(struct Curl_easy *data, CURLcode status,
+                         bool premature);
 
 /*
  * SMB handler interface
@@ -265,7 +267,7 @@ const struct Curl_handler Curl_handler_smb = {
   "smb",                                /* scheme */
   smb_setup_connection,                 /* setup_connection */
   smb_do,                               /* do_it */
-  ZERO_NULL,                            /* done */
+  smb_done,                             /* done */
   ZERO_NULL,                            /* do_more */
   smb_connect,                          /* connect_it */
   smb_connection_state,                 /* connecting */
@@ -293,7 +295,7 @@ const struct Curl_handler Curl_handler_smbs = {
   "smbs",                               /* scheme */
   smb_setup_connection,                 /* setup_connection */
   smb_do,                               /* do_it */
-  ZERO_NULL,                            /* done */
+  smb_done,                             /* done */
   ZERO_NULL,                            /* do_more */
   smb_connect,                          /* connect_it */
   smb_connection_state,                 /* connecting */
@@ -1192,6 +1194,26 @@ static CURLcode smb_parse_url_path(struct Curl_easy *data,
     if(*slash == '/')
       *slash = '\\';
   }
+  return CURLE_OK;
+}
+
+/*
+ * smb_done() is called when the SMB transfer is complete.
+ *
+ * Disable connection reuse for SMB to prevent using the wrong
+ * share on subsequent requests. SMB connections are not safe to
+ * reuse when different shares are involved.
+ *
+ * This is the backport of the upstream CVE-2026-5773 fix
+ * (commit 74a169575d6412dc0ff532acdf94de35a6c2a571) adapted
+ * for the Curl_handler architecture used in curl 8.x.
+ */
+static CURLcode smb_done(struct Curl_easy *data, CURLcode status,
+                         bool premature)
+{
+  (void)status;
+  (void)premature;
+  connclose(data->conn, "SMB connection reuse disabled");
   return CURLE_OK;
 }
 

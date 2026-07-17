@@ -264,6 +264,16 @@ AS_HELP_STRING([--with-gnutls=PATH],[where to look for GnuTLS, PATH points to th
   fi
 ])
 
+# Debian-specific changes - tweak build settings if we're building with gnutls
+AM_CONDITIONAL(GNUTLSBUILD, test x$OPT_GNUTLS != xno)
+if test X$OPT_GNUTLS != Xno; then
+  AC_SUBST(LIBCURL_FILESTUB, ["libcurl-gnutls"])
+  AC_SUBST(CURL_LIBCURL_VERSIONED_SYMBOLS_SONAME, [3])
+else
+  AC_SUBST(LIBCURL_FILESTUB, ["libcurl"])
+  AC_SUBST(CURL_LIBCURL_VERSIONED_SYMBOLS_SONAME, [4])
+fi
+
 OPT_MBEDTLS=no
 AC_ARG_WITH(mbedtls,dnl
 AS_HELP_STRING([--with-mbedtls=PATH],[where to look for mbedTLS, PATH points to the installation root]),[
@@ -2031,7 +2041,8 @@ if test x"$want_gss" = xyes; then
           gss_libs=`$GSSAPI_ROOT/bin/$host_alias-krb5-config --libs gssapi`
           LIBS="$gss_libs $LIBS"
         elif test "$PKGCONFIG" != "no"; then
-          gss_libs=`$PKGCONFIG --libs mit-krb5-gssapi`
+          LDFLAGS="$LDFLAGS `$PKGCONFIG --libs-only-L mit-krb5-gssapi`"
+          gss_libs=`$PKGCONFIG --libs-only-l mit-krb5-gssapi`
           LIBS="$gss_libs $LIBS"
         elif test -f "$KRB5CONFIG"; then
           dnl krb5-config doesn't have --libs-only-L or similar, put everything
@@ -2670,7 +2681,7 @@ AS_HELP_STRING([--disable-versioned-symbols], [Disable versioned symbols in shar
 )
 
 AC_SUBST([CURL_LIBCURL_VERSIONED_SYMBOLS_PREFIX], ["$versioned_symbols_flavour"])
-AC_SUBST([CURL_LIBCURL_VERSIONED_SYMBOLS_SONAME], ["4"])  dnl Keep in sync with VERSIONCHANGE - VERSIONDEL in lib/Makefile.soname
+# AC_SUBST([CURL_LIBCURL_VERSIONED_SYMBOLS_SONAME], ["4"])  dnl Keep in sync with VERSIONCHANGE - VERSIONDEL in lib/Makefile.soname
 AM_CONDITIONAL([CURL_LT_SHLIB_USE_VERSIONED_SYMBOLS],
   [test "x$versioned_symbols" = 'xyes'])
 
