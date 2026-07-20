@@ -20,3 +20,15 @@ cve-2026-3784.patch
 # Security fixes
 cve-2026-6276.patch
 cve-2026-5773.patch
+
+# CVEs batch 2026-07-20
+CVE-2026-10536.patch
+CVE-2026-11352.patch
+CVE-2026-11856.patch
+CVE-2026-8286.patch
+CVE-2026-8924.patch
+CVE-2026-8925.patch
+CVE-2026-8932.patch
+CVE-2026-9079.patch
+CVE-2026-9545.patch
+CVE-2026-9547.patch

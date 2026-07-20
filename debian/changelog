@@ -1,3 +1,22 @@
+curl (8.11.0-0deepin5) unstable; urgency=high
+
+  * Backport upstream fixes for CVEs via quilt patches:
+    - CVE-2026-10536: http2: remove stream dependency tracking
+    - CVE-2026-11352: fix vquic buffer handling
+    - CVE-2026-11856: digest: flush state on origin or credential change
+    - CVE-2026-8286: url: fix connection reuse for starttls protocols
+    - CVE-2026-8924: cookie: trim trailing dots when checking PSL
+    - CVE-2026-8925: gsasl: fix potential double free
+    - CVE-2026-8926: netrc: fix memory handling
+    - CVE-2026-8927: url: detect proxy changes read from environment
+    - CVE-2026-8932: wolfssl: fix certificate verification
+    - CVE-2026-9079: setopt: clear proxy auth properly on NULL
+    - CVE-2026-9545: ngtcp2: fail handshake directly
+    - CVE-2026-9546: transfer: clear referer when set to NULL
+    - CVE-2026-9547: libssh: map SSH_KNOWN_HOSTS_OTHER to CURLKHMATCH_MISMATCH
+
+ -- deepin-ci-robot <packages@deepin.org>  Sun, 19 Jul 2026 01:32:26 +0800
+
 curl (8.11.0-0deepin4) unstable; urgency=high
 
   * Fix CVE-2026-5773: SMB connection reuse may use wrong share
