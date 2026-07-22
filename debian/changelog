@@ -1,3 +1,9 @@
+curl (8.11.0-0deepin15) unstable; urgency=medium
+
+  * fix(cve): CVE-2026-5545
+
+ -- deepin-ci-robot <packages@deepin.org>  Wed, 22 Jul 2026 18:59:44 +0800
+
 curl (8.11.0-0deepin14) unstable; urgency=medium
 
   * fix(cve): CVE-2026-4873
