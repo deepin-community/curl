@@ -35,13 +35,13 @@
 /*
   List of URLs to fetch.
 
-  If you intend to use a SSL-based protocol here you might need to setup TLS
+  If you intend to use an SSL-based protocol here you might need to setup TLS
   library mutex callbacks as described here:
 
   https://curl.se/libcurl/c/threadsafe.html
 
 */
-const char * const urls[NUMT]= {
+static const char * const urls[NUMT]= {
   "https://curl.se/",
   "ftp://example.com/",
   "https://example.net/",
@@ -67,7 +67,7 @@ static void *pull_one_url(void *url)
    void * (*start_func)(void *), void *arg);
 */
 
-int main(int argc, char **argv)
+int main(void)
 {
   pthread_t tid[NUMT];
   int i;
