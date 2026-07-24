@@ -26,13 +26,20 @@
 #ifndef CURL_DISABLE_NETRC
 
 #ifdef HAVE_PWD_H
+#ifdef __AMIGA__
+#undef __NO_NET_API /* required for AmigaOS to declare getpwuid() */
+#endif
 #include <pwd.h>
+#ifdef __AMIGA__
+#define __NO_NET_API
+#endif
 #endif
 
 #include <curl/curl.h>
 #include "netrc.h"
 #include "strcase.h"
 #include "curl_get_line.h"
+#include "curlx/strparse.h"
 
 /* The last 3 #include files should be in this order */
 #include "curl_printf.h"
@@ -54,82 +61,89 @@ enum found_state {
   PASSWORD
 };
 
-#define NETRC_FILE_MISSING 1
-#define NETRC_FAILED -1
-#define NETRC_SUCCESS 0
+#define FOUND_LOGIN    1
+#define FOUND_PASSWORD 2
 
-#define MAX_NETRC_LINE 4096
-#define MAX_NETRC_FILE (64*1024)
-#define MAX_NETRC_TOKEN 128
+#define MAX_NETRC_LINE 16384
+#define MAX_NETRC_FILE (128*1024)
+#define MAX_NETRC_TOKEN 4096
 
-static CURLcode file2memory(const char *filename, struct dynbuf *filebuf)
+/* convert a dynbuf call CURLcode error to a NETRCcode error */
+#define curl2netrc(result)                     \
+  (((result) == CURLE_OUT_OF_MEMORY) ?         \
+   NETRC_OUT_OF_MEMORY : NETRC_SYNTAX_ERROR)
+
+static NETRCcode file2memory(const char *filename, struct dynbuf *filebuf)
 {
-  CURLcode result = CURLE_OK;
+  NETRCcode ret = NETRC_FILE_MISSING; /* if it cannot open the file */
   FILE *file = fopen(filename, FOPEN_READTEXT);
   struct dynbuf linebuf;
-  Curl_dyn_init(&linebuf, MAX_NETRC_LINE);
+  curlx_dyn_init(&linebuf, MAX_NETRC_LINE);
 
   if(file) {
+    ret = NETRC_OK;
     while(Curl_get_line(&linebuf, file)) {
-      const char *line = Curl_dyn_ptr(&linebuf);
+      CURLcode result;
+      const char *line = curlx_dyn_ptr(&linebuf);
       /* skip comments on load */
-      while(ISBLANK(*line))
-        line++;
+      curlx_str_passblanks(&line);
       if(*line == '#')
         continue;
-      result = Curl_dyn_add(filebuf, line);
-      if(result)
+      result = curlx_dyn_add(filebuf, line);
+      if(result) {
+        ret = curl2netrc(result);
         goto done;
+      }
     }
   }
 done:
-  Curl_dyn_free(&linebuf);
+  curlx_dyn_free(&linebuf);
   if(file)
     fclose(file);
-  return result;
+  return ret;
 }
 
 /*
  * Returns zero on success.
  */
-static int parsenetrc(struct store_netrc *store,
-                      const char *host,
-                      char **loginp,
-                      char **passwordp,
-                      const char *netrcfile)
+static NETRCcode parsenetrc(struct store_netrc *store,
+                            const char *host,
+                            char **loginp, /* might point to a username */
+                            char **passwordp,
+                            const char *netrcfile)
 {
-  int retcode = NETRC_FILE_MISSING;
+  NETRCcode retcode = NETRC_NO_MATCH;
   char *login = *loginp;
-  char *password = *passwordp;
-  bool specific_login = (login && *login != 0);
-  bool login_alloc = FALSE;
-  bool password_alloc = FALSE;
+  char *password = NULL;
+  bool specific_login = !!login; /* points to something */
   enum host_lookup_state state = NOTHING;
-  enum found_state found = NONE;
-  bool our_login = TRUE;  /* With specific_login, found *our* login name (or
-                             login-less line) */
+  enum found_state keyword = NONE;
+  unsigned char found = 0; /* login + password found bits, as they can come in
+                              any order */
+  bool our_login = FALSE;  /* found our login name */
   bool done = FALSE;
   char *netrcbuffer;
   struct dynbuf token;
   struct dynbuf *filebuf = &store->filebuf;
-  Curl_dyn_init(&token, MAX_NETRC_TOKEN);
+  DEBUGASSERT(!*passwordp);
+  curlx_dyn_init(&token, MAX_NETRC_TOKEN);
 
   if(!store->loaded) {
-    if(file2memory(netrcfile, filebuf))
-      return NETRC_FAILED;
+    NETRCcode ret = file2memory(netrcfile, filebuf);
+    if(ret)
+      return ret;
     store->loaded = TRUE;
   }
 
-  netrcbuffer = Curl_dyn_ptr(filebuf);
+  netrcbuffer = curlx_dyn_ptr(filebuf);
 
   while(!done) {
-    char *tok = netrcbuffer;
-    while(tok) {
-      char *tok_end;
+    const char *tok = netrcbuffer;
+    while(tok && !done) {
+      const char *tok_end;
       bool quoted;
-      Curl_dyn_reset(&token);
-      while(ISBLANK(*tok))
-        tok++;
+      curlx_dyn_reset(&token);
+      curlx_str_passblanks(&tok);
       /* tok is first non-space letter */
       if(state == MACDEF) {
         if((*tok == '\n') || (*tok == '\r'))
@@ -146,12 +160,18 @@ static int parsenetrc(struct store_netrc *store,
       tok_end = tok;
       if(!quoted) {
         size_t len = 0;
-        while(!ISSPACE(*tok_end)) {
+        CURLcode result;
+        while(*tok_end > ' ') {
           tok_end++;
           len++;
         }
-        if(!len || Curl_dyn_addn(&token, tok, len)) {
-          retcode = NETRC_FAILED;
+        if(!len) {
+          retcode = NETRC_SYNTAX_ERROR;
+          goto out;
+        }
+        result = curlx_dyn_addn(&token, tok, len);
+        if(result) {
+          retcode = curl2netrc(result);
           goto out;
         }
       }
@@ -160,6 +180,7 @@ static int parsenetrc(struct store_netrc *store,
         bool endquote = FALSE;
         tok_end++; /* pass the leading quote */
         while(*tok_end) {
+          CURLcode result;
           char s = *tok_end;
           if(escape) {
             escape = FALSE;
@@ -185,25 +206,26 @@ static int parsenetrc(struct store_netrc *store,
             endquote = TRUE;
             break;
           }
-          if(Curl_dyn_addn(&token, &s, 1)) {
-            retcode = NETRC_FAILED;
+          result = curlx_dyn_addn(&token, &s, 1);
+          if(result) {
+            retcode = curl2netrc(result);
             goto out;
           }
           tok_end++;
         }
         if(escape || !endquote) {
           /* bad syntax, get out */
-          retcode = NETRC_FAILED;
+          retcode = NETRC_SYNTAX_ERROR;
           goto out;
         }
       }
 
-      if((login && *login) && (password && *password)) {
-        done = TRUE;
-        break;
-      }
-
-      tok = Curl_dyn_ptr(&token);
+      if(curlx_dyn_len(&token))
+        tok = curlx_dyn_ptr(&token);
+      else
+        /* since tok might actually be NULL for no content, set it to blank
+           to avoid having to deal with it being NULL */
+        tok = "";
 
       switch(state) {
       case NOTHING:
@@ -212,14 +234,21 @@ static int parsenetrc(struct store_netrc *store,
              contents begin with the next .netrc line and continue until a
              null line (consecutive new-line characters) is encountered. */
           state = MACDEF;
-        else if(strcasecompare("machine", tok))
+        else if(strcasecompare("machine", tok)) {
           /* the next tok is the machine name, this is in itself the delimiter
              that starts the stuff entered for this machine, after this we
              need to search for 'login' and 'password'. */
           state = HOSTFOUND;
+          keyword = NONE;
+          found = 0;
+          our_login = FALSE;
+          Curl_safefree(password);
+          if(!specific_login)
+            Curl_safefree(login);
+        }
         else if(strcasecompare("default", tok)) {
           state = HOSTVALID;
-          retcode = NETRC_SUCCESS; /* we did find our host */
+          retcode = NETRC_OK; /* we did find our host */
         }
         break;
       case MACDEF:
@@ -230,7 +259,7 @@ static int parsenetrc(struct store_netrc *store,
         if(strcasecompare(host, tok)) {
           /* and yes, this is our host! */
           state = HOSTVALID;
-          retcode = NETRC_SUCCESS; /* we did find our host */
+          retcode = NETRC_OK; /* we did find our host */
         }
         else
           /* not our host */
@@ -238,44 +267,59 @@ static int parsenetrc(struct store_netrc *store,
         break;
       case HOSTVALID:
         /* we are now parsing sub-keywords concerning "our" host */
-        if(found == LOGIN) {
-          if(specific_login) {
+        if(keyword == LOGIN) {
+          if(specific_login)
             our_login = !Curl_timestrcmp(login, tok);
-          }
-          else if(!login || Curl_timestrcmp(login, tok)) {
-            if(login_alloc)
-              free(login);
+          else {
+            our_login = TRUE;
+            free(login);
             login = strdup(tok);
             if(!login) {
-              retcode = NETRC_FAILED; /* allocation failed */
+              retcode = NETRC_OUT_OF_MEMORY; /* allocation failed */
               goto out;
             }
-            login_alloc = TRUE;
           }
-          found = NONE;
+          found |= FOUND_LOGIN;
+          keyword = NONE;
         }
-        else if(found == PASSWORD) {
-          if((our_login || !specific_login) &&
-             (!password || Curl_timestrcmp(password, tok))) {
-            if(password_alloc)
-              free(password);
-            password = strdup(tok);
-            if(!password) {
-              retcode = NETRC_FAILED; /* allocation failed */
-              goto out;
-            }
-            password_alloc = TRUE;
+        else if(keyword == PASSWORD) {
+          free(password);
+          password = strdup(tok);
+          if(!password) {
+            retcode = NETRC_OUT_OF_MEMORY; /* allocation failed */
+            goto out;
           }
-          found = NONE;
+          if(!specific_login || our_login)
+            found |= FOUND_PASSWORD;
+          keyword = NONE;
         }
         else if(strcasecompare("login", tok))
-          found = LOGIN;
+          keyword = LOGIN;
         else if(strcasecompare("password", tok))
-          found = PASSWORD;
+          keyword = PASSWORD;
         else if(strcasecompare("machine", tok)) {
-          /* ok, there is machine here go => */
+          /* a new machine here */
+          if(found & FOUND_PASSWORD) {
+            done = TRUE;
+            break;
+          }
           state = HOSTFOUND;
-          found = NONE;
+          keyword = NONE;
+          found = 0;
+          Curl_safefree(password);
+          if(!specific_login)
+            Curl_safefree(login);
+        }
+        else if(strcasecompare("default", tok)) {
+          state = HOSTVALID;
+          retcode = NETRC_OK; /* we did find our host */
+          Curl_safefree(password);
+          if(!specific_login)
+            Curl_safefree(login);
+        }
+        if((found == (FOUND_PASSWORD|FOUND_LOGIN)) && our_login) {
+          done = TRUE;
+          break;
         }
         break;
       } /* switch (state) */
@@ -293,27 +337,49 @@ static int parsenetrc(struct store_netrc *store,
   } /* while !done */
 
 out:
-  Curl_dyn_free(&token);
+  curlx_dyn_free(&token);
+  if(!retcode) {
+    if(!password && our_login) {
+      /* success without a password, set a blank one */
+      password = strdup("");
+      if(!password)
+        retcode = NETRC_OUT_OF_MEMORY; /* out of memory */
+    }
+    else if(!login && !password)
+      /* a default with no credentials */
+      retcode = NETRC_NO_MATCH;
+  }
   if(!retcode) {
     /* success */
-    if(login_alloc) {
-      free(*loginp);
+    if(!specific_login)
       *loginp = login;
-    }
-    if(password_alloc) {
-      free(*passwordp);
-      *passwordp = password;
-    }
+    *passwordp = password;
   }
   else {
-    Curl_dyn_free(filebuf);
-    if(login_alloc)
+    curlx_dyn_free(filebuf);
+    if(!specific_login)
       free(login);
-    if(password_alloc)
-      free(password);
+    free(password);
   }
 
   return retcode;
+}
+
+const char *Curl_netrc_strerror(NETRCcode ret)
+{
+  switch(ret) {
+  default:
+    return ""; /* not a legit error */
+  case NETRC_FILE_MISSING:
+    return "no such file";
+  case NETRC_NO_MATCH:
+    return "no matching entry";
+  case NETRC_OUT_OF_MEMORY:
+    return "out of memory";
+  case NETRC_SYNTAX_ERROR:
+    return "syntax error";
+  }
+  /* never reached */
 }
 
 /*
@@ -322,11 +388,11 @@ out:
  * *loginp and *passwordp MUST be allocated if they are not NULL when passed
  * in.
  */
-int Curl_parsenetrc(struct store_netrc *store, const char *host,
-                    char **loginp, char **passwordp,
-                    char *netrcfile)
+NETRCcode Curl_parsenetrc(struct store_netrc *store, const char *host,
+                          char **loginp, char **passwordp,
+                          char *netrcfile)
 {
-  int retcode = 1;
+  NETRCcode retcode = NETRC_OK;
   char *filealloc = NULL;
 
   if(!netrcfile) {
@@ -364,13 +430,13 @@ int Curl_parsenetrc(struct store_netrc *store, const char *host,
     }
 
     if(!home)
-      return retcode; /* no home directory found (or possibly out of
-                         memory) */
+      return NETRC_FILE_MISSING; /* no home directory found (or possibly out
+                                    of memory) */
 
     filealloc = aprintf("%s%s.netrc", home, DIR_CHAR);
     if(!filealloc) {
       free(homea);
-      return -1;
+      return NETRC_OUT_OF_MEMORY;
     }
     retcode = parsenetrc(store, host, loginp, passwordp, filealloc);
     free(filealloc);
@@ -380,7 +446,7 @@ int Curl_parsenetrc(struct store_netrc *store, const char *host,
       filealloc = aprintf("%s%s_netrc", home, DIR_CHAR);
       if(!filealloc) {
         free(homea);
-        return -1;
+        return NETRC_OUT_OF_MEMORY;
       }
       retcode = parsenetrc(store, host, loginp, passwordp, filealloc);
       free(filealloc);
@@ -395,12 +461,12 @@ int Curl_parsenetrc(struct store_netrc *store, const char *host,
 
 void Curl_netrc_init(struct store_netrc *s)
 {
-  Curl_dyn_init(&s->filebuf, MAX_NETRC_FILE);
+  curlx_dyn_init(&s->filebuf, MAX_NETRC_FILE);
   s->loaded = FALSE;
 }
 void Curl_netrc_cleanup(struct store_netrc *s)
 {
-  Curl_dyn_free(&s->filebuf);
+  curlx_dyn_free(&s->filebuf);
   s->loaded = FALSE;
 }
 #endif

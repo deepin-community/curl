@@ -999,7 +999,7 @@ FAQ
   the control connection and will therefore immediately connect and try to
   speak SSL. FTPS:// connections default to port 990.
 
-  To use explicit FTPS, you use an FTP:// URL and the --ftp-ssl option (or one
+  To use explicit FTPS, you use an FTP:// URL and the --ssl-reqd option (or one
   of its related flavors). This is the most common method, and the one
   mandated by RFC 4217. This kind of connection will then of course use the
   standard FTP port 21 by default.
@@ -1411,7 +1411,7 @@ FAQ
 
 6. License Issues
 
-  curl and libcurl are released under a MIT/X derivative license. The license
+  curl and libcurl are released under an MIT/X derivative license. The license
   is liberal and should not impose a problem for your project. This section is
   just a brief summary for the cases we get the most questions. (Parts of this
   section was much enhanced by Bjorn Reese.)
