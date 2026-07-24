@@ -1,3 +1,9 @@
+curl (8.14.1-2+deb13u4deepin1) unstable; urgency=medium
+
+  * Revert t64.
+
+ -- lichenggang <lichenggang@uniontech.com>  Fri, 24 Jul 2026 11:07:50 +0800
+
 curl (8.14.1-2+deb13u4) trixie; urgency=medium
 
   * Import upstream patches for 13 CVE fixes:
