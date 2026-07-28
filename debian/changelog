@@ -1,3 +1,10 @@
+curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
+
+  * fix(cve): CVE-2026-8926 - netrc: do not use password from non-matching
+    login entry when a specific user is provided in the URL
+
+ -- deepin-ci-robot <packages@deepin.org>  Tue, 28 Jul 2026 17:00:00 +0800
+
 curl (8.14.1-2+deb13u4deepin18) unstable; urgency=medium
 
   * fix(cve): CVE-2025-11563
