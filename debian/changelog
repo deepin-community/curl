@@ -1,3 +1,12 @@
+curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
+
+  * fix(cve): CVE-2026-80230 (unknown) - [PATCH] openssl: no server cert
+    is only okay if also not pinned   Upstream:
+    https://github.com/curl/curl/commit/5267ed859d545534d0c21675a2b70af5
+    a3b6e3ef
+
+ -- deepin-ci-robot <packages@deepin.org>  Thu, 03 Sep 2026 04:10:28 +0800
+
 curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
 
   * fix(cve): CVE-2026-8926 - netrc: do not use password from non-matching
