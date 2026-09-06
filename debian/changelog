@@ -1,3 +1,12 @@
+curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
+
+  * fix(cve): CVE-2026-13608 (unknown) - [PATCH] openldap: handle
+    Curl_sasl_continue() returns better   Upstream:
+    https://github.com/curl/curl/commit/ea71c3b6b60e563651ea8596a975aef0
+    c8199519
+
+ -- deepin-ci-robot <packages@deepin.org>  Mon, 07 Sep 2026 07:14:20 +0800
+
 curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
 
   * fix(cve): CVE-2026-8926 - netrc: do not use password from non-matching
