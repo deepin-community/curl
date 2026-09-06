@@ -71,6 +71,11 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     8.14.1 code base (testutil.pm CRLF conversion for CONNECT, LF header
     echo in test2173, CURLE_RECV_ERROR 56 on failed proxy tunnel)
 
+  * fix(cve): CVE-2026-13608 (unknown) - [PATCH] openldap: handle
+    Curl_sasl_continue() returns better   Upstream:
+    https://github.com/curl/curl/commit/ea71c3b6b60e563651ea8596a975aef0
+    c8199519
+
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
 curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
