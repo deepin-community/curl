@@ -4,6 +4,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     Curl_sasl_continue() returns better   Upstream:
     https://github.com/curl/curl/commit/ea71c3b6b60e563651ea8596a975aef0
     c8199519
+  * fix(cve): CVE-2026-80255 (unknown) - [PATCH] cookie: improve TAB
+    handling   Upstream:
+    https://github.com/curl/curl/commit/4f6aa41a0145e930e766775dbe860883
+    d350aa0a
 
  -- deepin-ci-robot <packages@deepin.org>  Mon, 07 Sep 2026 07:14:20 +0800
 
