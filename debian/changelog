@@ -12,6 +12,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     provider is used   Upstream:
     https://github.com/curl/curl/commit/7ea37abc6ac0120ba5f6d94be8d196f7
     cf1506bb
+  * fix(cve): CVE-2026-18924 (unknown) - http2: make server push
+    transfers inherit share from parent   Upstream:
+    https://github.com/curl/curl/commit/90325ff0444cbdff368bda5d26d6405a
+    0bb6ee43
 
  -- deepin-ci-robot <packages@deepin.org>  Mon, 07 Sep 2026 07:14:20 +0800
 
