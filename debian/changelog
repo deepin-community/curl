@@ -8,6 +8,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     handling   Upstream:
     https://github.com/curl/curl/commit/4f6aa41a0145e930e766775dbe860883
     d350aa0a
+  * fix(cve): CVE-2026-80229 (unknown) - openssl: avoid conn reuse if
+    provider is used   Upstream:
+    https://github.com/curl/curl/commit/7ea37abc6ac0120ba5f6d94be8d196f7
+    cf1506bb
 
  -- deepin-ci-robot <packages@deepin.org>  Mon, 07 Sep 2026 07:14:20 +0800
 
