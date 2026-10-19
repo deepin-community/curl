@@ -17,6 +17,9 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     security options for SCP/SFTP   Upstream:
     https://github.com/curl/curl/commit/6ae9befb2fb6bdfdb5fc11fdf76bbe51
     9fe1f52c
+  * fix(cve): CVE-2026-107928 (unknown) - gnutls: hardening   Upstream:
+    https://github.com/curl/curl/commit/64fb3e7a7b116f690966054f28162415
+    2d4a7651
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
