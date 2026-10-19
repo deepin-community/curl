@@ -5,6 +5,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     8.14.1 code base, plus the CURLOPT_USERNAME ambient user documentation
     (c23bc84be4). Replaces the previous verbatim copy of the 8.22.0-DEV
     commit, which does not compile on 8.14.1.
+  * fix(cve): CVE-2026-87865 (unknown) - libssh2: match hashed
+    known_hosts entries by host   Upstream:
+    https://github.com/curl/curl/commit/323c184b6bdf5b1988a10c0a61560666
+    e1588149
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
