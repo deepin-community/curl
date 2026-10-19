@@ -13,6 +13,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     counter for Curl_pp_readresp   Upstream:
     https://github.com/curl/curl/commit/753735af87f5c30cb6f60a70342f8bc4
     bc5fd5db
+  * fix(cve): CVE-2026-86410 (unknown) - config2setopts: always set the
+    security options for SCP/SFTP   Upstream:
+    https://github.com/curl/curl/commit/6ae9befb2fb6bdfdb5fc11fdf76bbe51
+    9fe1f52c
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
