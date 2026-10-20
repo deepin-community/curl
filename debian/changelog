@@ -36,6 +36,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     Upstream:
     https://github.com/curl/curl/commit/3b547de301342b347fb3c6ea6ae79790
     70793a66
+  * fix(cve): CVE-2026-92390 (unknown) - tool: buffer headers before
+    remote filename selection   Upstream:
+    https://github.com/curl/curl/commit/c24a69d8cd368de4e25e3540bf0b7b00
+    0a31d5a7
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
