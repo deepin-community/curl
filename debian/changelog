@@ -32,6 +32,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     Upstream:
     https://github.com/curl/curl/commit/ed131747c1a3dc7f816d26724c44537a
     c8acba44
+  * fix(cve): CVE-2026-87864 (unknown) - imap: APPEND CRLF fix
+    Upstream:
+    https://github.com/curl/curl/commit/3b547de301342b347fb3c6ea6ae79790
+    70793a66
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
