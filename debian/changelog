@@ -44,6 +44,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     CURLOPT_AWS_SIGV4 disable aws-sigv4 auth   Upstream:
     https://github.com/curl/curl/commit/c3c70440e8d9938c0bb732595751e8ae
     bc614f24
+  * fix(cve): CVE-2026-87863 (unknown) - hsts: cap max-age to two years
+    Upstream:
+    https://github.com/curl/curl/commit/08d50a791b3197a3d0a4fc2f778e243f
+    5501c67e
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
