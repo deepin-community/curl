@@ -48,6 +48,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     Upstream:
     https://github.com/curl/curl/commit/08d50a791b3197a3d0a4fc2f778e243f
     5501c67e
+  * fix(cve): CVE-2026-94266 (unknown) - getinfo: make sure
+    CURLINFO_EFFECTIVE_URL does not contain creds   Upstream:
+    https://github.com/curl/curl/commit/7a6bd027d0de2b6857472d35da090ef6
+    0cc29f19.patch
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
