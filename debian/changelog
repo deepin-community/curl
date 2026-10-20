@@ -28,6 +28,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     lines in cookie jars   Upstream:
     https://github.com/curl/curl/commit/445aa87e13f91c94bc742f54343a2eac
     924e1765
+  * fix(cve): CVE-2026-87866 (unknown) - x509: stricter parsing
+    Upstream:
+    https://github.com/curl/curl/commit/ed131747c1a3dc7f816d26724c44537a
+    c8acba44
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
