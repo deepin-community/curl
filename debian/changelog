@@ -24,6 +24,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     exact duplicates   Upstream:
     https://github.com/curl/curl/commit/a1614c3bcf1593eb524b37792124357d
     97a5429c
+  * fix(cve): CVE-2026-92386 (unknown) - cookie: accept slightly longer
+    lines in cookie jars   Upstream:
+    https://github.com/curl/curl/commit/445aa87e13f91c94bc742f54343a2eac
+    924e1765
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
