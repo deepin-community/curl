@@ -56,6 +56,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     connection reuse match   Upstream:
     https://github.com/curl/curl/commit/d37d79df1e01066417aff0a9e6bc675e
     dad3edba
+  * fix(cve): CVE-2026-86414 (unknown) - HTTP-CONNECT: do not react to
+    401 responses   Upstream:
+    https://github.com/curl/curl/commit/2956af6c7451029fb12c12f8166dff21
+    1f930d52
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
