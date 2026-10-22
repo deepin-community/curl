@@ -64,6 +64,12 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     places   Upstream:
     https://github.com/curl/curl/commit/63dd390fab905a239a97e27005329293
     43ebc4e9
+  * fix(cve): CVE-2026-87865 - adapt the hashed known_hosts host match to
+    the 8.14.1 code base (no Curl_peer origin member; match on
+    conn->host.name and conn->remote_port)
+  * fix(cve): CVE-2026-86414 - adapt the tunnel-401 regression test to the
+    8.14.1 code base (testutil.pm CRLF conversion for CONNECT, LF header
+    echo in test2173, CURLE_RECV_ERROR 56 on failed proxy tunnel)
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
