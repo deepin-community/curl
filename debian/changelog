@@ -92,6 +92,12 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     https://github.com/curl/curl/commit/95c1e8915dce64606bd753fd47fc0bd2
     36e31cd6.patch
 
+  * fix(cve): CVE-2026-92388 (unknown) - ftplistparser: no more overwriting
+    set.write_func (FTP 通配符 LIST 解析不再改写应用写回调，失败路径也不会
+    残留被替换的回调，避免后续传输内存破坏)   Upstream:
+    https://github.com/curl/curl/commit/ba8f8a7f27a5c5e19e4ef212b90b35a
+    93559163e
+
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
 curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
