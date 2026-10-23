@@ -101,6 +101,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     in multi_done   Upstream:
     https://github.com/curl/curl/commit/8b0744af5b1b631da5b938ca31c3f989
     5ad5a321.patch
+  * fix(cve): CVE-2026-92391 (unknown) - mime: make curl_mime_free non-
+    recursive to avoid stack overflow   Upstream:
+    https://github.com/curl/curl/commit/d7546809d5bd548b69ec49fca26565c8
+    f6f0d344
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
