@@ -97,6 +97,10 @@ curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
     残留被替换的回调，避免后续传输内存破坏)   Upstream:
     https://github.com/curl/curl/commit/ba8f8a7f27a5c5e19e4ef212b90b35a
     93559163e
+  * fix(cve): CVE-2026-92392 (unknown) - multi: adjust the cleanup order
+    in multi_done   Upstream:
+    https://github.com/curl/curl/commit/8b0744af5b1b631da5b938ca31c3f989
+    5ad5a321.patch
 
  -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
 
