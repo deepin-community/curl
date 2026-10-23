@@ -1,3 +1,113 @@
+curl (8.14.1-2+deb13u4deepin20) unstable; urgency=medium
+
+  * fix(cve): CVE-2026-19931 - Negotiate ambient user connection reuse
+    Backport of the upstream fix (7103a93b05, building on 1a17959fc7) to the
+    8.14.1 code base, plus the CURLOPT_USERNAME ambient user documentation
+    (c23bc84be4). Replaces the previous verbatim copy of the 8.22.0-DEV
+    commit, which does not compile on 8.14.1.
+  * fix(cve): CVE-2026-87865 (unknown) - libssh2: match hashed
+    known_hosts entries by host   Upstream:
+    https://github.com/curl/curl/commit/323c184b6bdf5b1988a10c0a61560666
+    e1588149
+  * fix(cve): CVE-2026-92387 (unknown) - pingpong: add a max loop
+    counter for Curl_pp_readresp   Upstream:
+    https://github.com/curl/curl/commit/753735af87f5c30cb6f60a70342f8bc4
+    bc5fd5db
+  * fix(cve): CVE-2026-86410 (unknown) - config2setopts: always set the
+    security options for SCP/SFTP   Upstream:
+    https://github.com/curl/curl/commit/6ae9befb2fb6bdfdb5fc11fdf76bbe51
+    9fe1f52c
+  * fix(cve): CVE-2026-107928 (unknown) - gnutls: hardening   Upstream:
+    https://github.com/curl/curl/commit/64fb3e7a7b116f690966054f28162415
+    2d4a7651
+  * fix(cve): CVE-2026-87862 (unknown) - hsts: on load, only remove
+    exact duplicates   Upstream:
+    https://github.com/curl/curl/commit/a1614c3bcf1593eb524b37792124357d
+    97a5429c
+  * fix(cve): CVE-2026-92386 (unknown) - cookie: accept slightly longer
+    lines in cookie jars   Upstream:
+    https://github.com/curl/curl/commit/445aa87e13f91c94bc742f54343a2eac
+    924e1765
+  * fix(cve): CVE-2026-87866 (unknown) - x509: stricter parsing
+    Upstream:
+    https://github.com/curl/curl/commit/ed131747c1a3dc7f816d26724c44537a
+    c8acba44
+  * fix(cve): CVE-2026-87864 (unknown) - imap: APPEND CRLF fix
+    Upstream:
+    https://github.com/curl/curl/commit/3b547de301342b347fb3c6ea6ae79790
+    70793a66
+  * fix(cve): CVE-2026-92390 (unknown) - tool: buffer headers before
+    remote filename selection   Upstream:
+    https://github.com/curl/curl/commit/c24a69d8cd368de4e25e3540bf0b7b00
+    0a31d5a7
+  * fix(cve): CVE-2026-86409 (unknown) - setopt: make NULL
+    CURLOPT_AWS_SIGV4 disable aws-sigv4 auth   Upstream:
+    https://github.com/curl/curl/commit/c3c70440e8d9938c0bb732595751e8ae
+    bc614f24
+  * fix(cve): CVE-2026-87863 (unknown) - hsts: cap max-age to two years
+    Upstream:
+    https://github.com/curl/curl/commit/08d50a791b3197a3d0a4fc2f778e243f
+    5501c67e
+  * fix(cve): CVE-2026-94266 (unknown) - getinfo: make sure
+    CURLINFO_EFFECTIVE_URL does not contain creds   Upstream:
+    https://github.com/curl/curl/commit/7a6bd027d0de2b6857472d35da090ef6
+    0cc29f19.patch
+  * fix(cve): CVE-2026-107929 (unknown) - url: CURLOPT_INTERFACE fix
+    connection reuse match   Upstream:
+    https://github.com/curl/curl/commit/d37d79df1e01066417aff0a9e6bc675e
+    dad3edba
+  * fix(cve): CVE-2026-86414 (unknown) - HTTP-CONNECT: do not react to
+    401 responses   Upstream:
+    https://github.com/curl/curl/commit/2956af6c7451029fb12c12f8166dff21
+    1f930d52
+  * fix(cve): CVE-2026-92389 (unknown) - tftp: verify direction in a few
+    places   Upstream:
+    https://github.com/curl/curl/commit/63dd390fab905a239a97e27005329293
+    43ebc4e9
+  * fix(cve): CVE-2026-87865 - adapt the hashed known_hosts host match to
+    the 8.14.1 code base (no Curl_peer origin member; match on
+    conn->host.name and conn->remote_port)
+  * fix(cve): CVE-2026-86414 - adapt the tunnel-401 regression test to the
+    8.14.1 code base (testutil.pm CRLF conversion for CONNECT, LF header
+    echo in test2173, CURLE_RECV_ERROR 56 on failed proxy tunnel)
+
+  * fix(cve): CVE-2026-13608 (unknown) - [PATCH] openldap: handle
+    Curl_sasl_continue() returns better   Upstream:
+    https://github.com/curl/curl/commit/ea71c3b6b60e563651ea8596a975aef0
+    c8199519
+  * fix(cve): CVE-2026-80255 (unknown) - [PATCH] cookie: improve TAB
+    handling   Upstream:
+    https://github.com/curl/curl/commit/4f6aa41a0145e930e766775dbe860883
+    d350aa0a
+  * fix(cve): CVE-2026-80229 (unknown) - openssl: avoid conn reuse if
+    provider is used   Upstream:
+    https://github.com/curl/curl/commit/7ea37abc6ac0120ba5f6d94be8d196f7
+    cf1506bb
+  * fix(cve): CVE-2026-18924 (unknown) - http2: make server push
+    transfers inherit share from parent   Upstream:
+    https://github.com/curl/curl/commit/90325ff0444cbdff368bda5d26d6405a
+    0bb6ee43
+  * fix(cve): CVE-2026-82209 (unknown) - cookie: cookies set for an
+    exact PSL domain is host-only   Upstream:
+    https://github.com/curl/curl/commit/95c1e8915dce64606bd753fd47fc0bd2
+    36e31cd6.patch
+
+  * fix(cve): CVE-2026-92388 (unknown) - ftplistparser: no more overwriting
+    set.write_func (FTP 通配符 LIST 解析不再改写应用写回调，失败路径也不会
+    残留被替换的回调，避免后续传输内存破坏)   Upstream:
+    https://github.com/curl/curl/commit/ba8f8a7f27a5c5e19e4ef212b90b35a
+    93559163e
+  * fix(cve): CVE-2026-92392 (unknown) - multi: adjust the cleanup order
+    in multi_done   Upstream:
+    https://github.com/curl/curl/commit/8b0744af5b1b631da5b938ca31c3f989
+    5ad5a321.patch
+  * fix(cve): CVE-2026-92391 (unknown) - mime: make curl_mime_free non-
+    recursive to avoid stack overflow   Upstream:
+    https://github.com/curl/curl/commit/d7546809d5bd548b69ec49fca26565c8
+    f6f0d344
+
+ -- deepin-ci-robot <packages@deepin.org>  Tue, 22 Sep 2026 11:50:00 +0800
+
 curl (8.14.1-2+deb13u4deepin19) unstable; urgency=medium
 
   * fix(cve): CVE-2026-8926 - netrc: do not use password from non-matching
