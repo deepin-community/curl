@@ -9,10 +9,6 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
-# Check if OpenSSL supports QUIC (>= 3.3.0)
-OPENSSL_QUIC_SUPPORT := $(shell pkg-config --modversion openssl 2>/dev/null | grep -q . \
-	&& dpkg --compare-versions "$$(pkg-config --modversion openssl 2>/dev/null)" ge 3.3.0 && echo yes || echo no)
-
 CONFIGURE_ARGS = -- --disable-dependency-tracking		\
 	--disable-symbol-hiding --enable-versioned-symbols	\
 	--enable-threaded-resolver --with-lber-lib=lber		\
@@ -58,7 +54,8 @@ ifeq ($(filter pkg.curl.no-openssl,$(DEB_BUILD_PROFILES)),)
 	autoreconf -fi && \
 	cp ../../ltmain.sh . && \
 	dh_auto_configure ${CONFIGURE_ARGS} --with-openssl \
-		$(if $(filter yes,$(OPENSSL_QUIC_SUPPORT)),--with-openssl-quic --with-nghttp3)
+		--with-openssl-quic \
+		--with-nghttp3
 endif
 ifeq ($(filter pkg.curl.no-gnutls,$(DEB_BUILD_PROFILES)),)
 	mkdir -p debian/build-gnutls
@@ -124,12 +121,12 @@ ifeq ($(filter pkg.curl.no-gnutls,$(DEB_BUILD_PROFILES)),)
 endif
 	find debian/tmp* -name '*.la' -delete
 ifeq ($(filter pkg.curl.no-openssl,$(DEB_BUILD_PROFILES)),)
-	dh_install -plibcurl4 -plibcurl4-openssl-dev -plibcurl4-doc \
+	dh_install -plibcurl4t64 -plibcurl4-openssl-dev -plibcurl4-doc \
 		-pcurl \
 		--sourcedir=debian/tmp
 endif
 ifeq ($(filter pkg.curl.no-gnutls,$(DEB_BUILD_PROFILES)),)
-	dh_install -plibcurl3-gnutls -plibcurl4-gnutls-dev	\
+	dh_install -plibcurl3t64-gnutls -plibcurl4-gnutls-dev	\
 		--sourcedir=debian/tmp-gnutls
 endif
 # Modify curl-config to make it architecture-independent:
